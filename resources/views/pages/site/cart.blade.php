@@ -80,7 +80,7 @@
                         </div>
                     </dl>
 
-                    <a href="{{ route('checkout.index') ?? '#' }}"
+                    <a href="{{ route('checkout') ?? '#' }}"
                        class="mt-5 block w-full text-center rounded-md px-4 py-2.5 text-sm font-medium text-white shadow-sm"
                        style="background-color: var(--color-accent);">
                         Checkout
