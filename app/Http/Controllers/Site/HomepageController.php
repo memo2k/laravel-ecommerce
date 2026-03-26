@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CartController extends Controller
+class HomepageController extends Controller
 {
     public function index()
     {
-        return view('pages.site.cart');
+        return view('pages.site.homepage');
     }
 }
