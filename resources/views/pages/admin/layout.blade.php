@@ -11,6 +11,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'ShopDemo Admin')</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body
     class="min-h-screen flex bg-slate-900 text-slate-100"
@@ -31,17 +32,20 @@
             </a>
         </div>
 
+        @php $currentRoute = Route::currentRouteName(); @endphp
+
         <nav class="flex-1 px-4 py-4 space-y-1 text-sm">
-            <a href="#"
-               class="block rounded-md px-3 py-2 font-medium hover:bg-slate-800 transition-colors">
+            <a href="{{ route('admin.dashboard') }}"
+               class="block rounded-md px-3 py-2 font-medium transition-colors {{ $currentRoute === 'admin.dashboard' ? 'text-white' : 'text-slate-300 hover:bg-slate-800' }}"
+               @if($currentRoute === 'admin.dashboard') style="background-color: var(--color-accent);" @endif>
                 Dashboard
             </a>
+
             <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400 px-3">
                 Catalog
             </div>
-            <a href="#"
-               class="block rounded-md px-3 py-2 font-medium bg-slate-800 text-white"
-               style="background-color: var(--color-accent);">
+            <a href="{{ route('admin.dashboard') }}"
+               class="block rounded-md px-3 py-2 font-medium text-slate-300 hover:bg-slate-800 transition-colors">
                 Products
             </a>
 
@@ -49,11 +53,11 @@
                 Sales
             </div>
             <a href="#"
-               class="block rounded-md px-3 py-2 font-medium hover:bg-slate-800 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-300 hover:bg-slate-800 transition-colors">
                 Orders
             </a>
             <a href="#"
-               class="block rounded-md px-3 py-2 font-medium hover:bg-slate-800 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-300 hover:bg-slate-800 transition-colors">
                 Customers
             </a>
         </nav>
@@ -71,8 +75,8 @@
                 ShopDemo <span class="text-slate-300">Admin</span>
             </div>
             <div class="flex gap-3 text-xs">
-                <a href="#" class="hover:underline">Dashboard</a>
-                <a href="#" class="hover:underline">Catalog</a>
+                <a href="{{ route('admin.dashboard') }}" class="hover:underline">Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}" class="hover:underline">Products</a>
                 <a href="#" class="hover:underline">Orders</a>
                 <a href="#" class="hover:underline">Customers</a>
             </div>
