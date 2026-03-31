@@ -41,29 +41,31 @@
                 Dashboard
             </a>
 
-            <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400 px-3">
-                Catalog
-            </div>
             <a href="{{ route('admin.dashboard') }}"
                class="block rounded-md px-3 py-2 font-medium text-slate-300 hover:bg-slate-800 transition-colors">
                 Products
             </a>
 
-            <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-400 px-3">
-                Sales
-            </div>
             <a href="#"
                class="block rounded-md px-3 py-2 font-medium text-slate-300 hover:bg-slate-800 transition-colors">
                 Orders
             </a>
+
             <a href="#"
                class="block rounded-md px-3 py-2 font-medium text-slate-300 hover:bg-slate-800 transition-colors">
                 Customers
             </a>
         </nav>
 
-        <div class="px-4 py-4 border-t border-slate-800 text-xs text-slate-400">
-            &copy; {{ date('Y') }} ShopDemo
+        <div class="px-4 py-4 border-t border-slate-800 space-y-3">
+            <a href="{{ route('homepage') }}" target="_blank"
+               class="flex items-center gap-2 text-xs text-slate-400 hover:text-slate-200 transition-colors">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                </svg>
+                View site
+            </a>
+            <p class="text-xs text-slate-400">&copy; {{ date('Y') }} ShopDemo</p>
         </div>
     </aside>
 
@@ -79,6 +81,8 @@
                 <a href="{{ route('admin.dashboard') }}" class="hover:underline">Products</a>
                 <a href="#" class="hover:underline">Orders</a>
                 <a href="#" class="hover:underline">Customers</a>
+                <span class="text-slate-600">|</span>
+                <a href="{{ route('homepage') }}" target="_blank" class="hover:underline text-slate-400">Site ↗</a>
             </div>
         </div>
     </header>
