@@ -24,12 +24,22 @@
 
             <!-- Auth + cart -->
             <div class="flex items-center gap-4">
-                <a href="{{ route('login') ?? '#' }}" class="hidden sm:inline hover:underline">
-                    Login
-                </a>
-                <a href="{{ route('register') ?? '#' }}" class="hidden sm:inline hover:underline">
-                    Register
-                </a>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="hidden sm:inline hover:underline">
+                            Logout
+                        </button>
+                    </form>
+                @else
+                    <a href="{{ route('login') ?? '#' }}" class="hidden sm:inline hover:underline">
+                        Login
+                    </a>
+                    
+                    <a href="{{ route('register') ?? '#' }}" class="hidden sm:inline hover:underline">
+                        Register
+                    </a>
+                @endauth
                 <a href="{{ route('cart.index') ?? '#' }}"
                    class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-medium hover:bg-white/20 transition-colors">
                     <span class="mr-1">Cart</span>
