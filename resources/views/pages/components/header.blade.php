@@ -25,6 +25,12 @@
             <!-- Auth + cart -->
             <div class="flex items-center gap-4">
                 @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') ?? '#' }}" class="hidden sm:inline hover:underline text-white">
+                            Dashboard
+                        </a>
+                    @endif
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="hidden sm:inline hover:underline">
