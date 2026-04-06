@@ -4,8 +4,8 @@
 
 @section('content')
     <div class="mb-6">
-        <h1 class="text-xl font-semibold tracking-tight text-white">Dashboard</h1>
-        <p class="text-xs text-slate-400 mt-1">Welcome back. Here's an overview of your store.</p>
+        <h1 class="text-xl font-semibold tracking-tight text-slate-900">Dashboard</h1>
+        <p class="text-xs text-slate-600 mt-1">Welcome back. Here's an overview of your store.</p>
     </div>
 
     {{-- Stat cards --}}
@@ -20,9 +20,9 @@
         @endphp
 
         @foreach ($stats as $stat)
-            <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-                <p class="text-xs font-medium uppercase tracking-wide text-slate-400">{{ $stat['label'] }}</p>
-                <p class="mt-2 text-2xl font-semibold text-white">{{ $stat['value'] }}</p>
+            <div class="rounded-xl border border-slate-200 bg-white p-5">
+                <p class="text-xs font-medium uppercase tracking-wide text-slate-600">{{ $stat['label'] }}</p>
+                <p class="mt-2 text-2xl font-semibold text-slate-900">{{ $stat['value'] }}</p>
                 <p class="mt-1 text-xs {{ $stat['up'] ? 'text-emerald-400' : 'text-rose-400' }}">
                     {{ $stat['change'] }} from last month
                 </p>
@@ -33,10 +33,10 @@
     <div class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         {{-- Recent orders --}}
         <div>
-            <h2 class="text-sm font-semibold text-slate-100 mb-3">Recent orders</h2>
-            <div class="rounded-xl border border-slate-800 bg-slate-900/60 overflow-hidden text-sm">
+            <h2 class="text-sm font-semibold text-slate-900 mb-3">Recent orders</h2>
+            <div class="rounded-xl border border-slate-200 bg-white overflow-hidden text-sm">
                 <table class="min-w-full">
-                    <thead class="bg-slate-900 border-b border-slate-800 text-xs font-medium uppercase tracking-wide text-slate-400">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-600">
                     <tr class="text-left">
                         <th class="px-4 py-3">Order</th>
                         <th class="px-4 py-3">Customer</th>
@@ -44,7 +44,7 @@
                         <th class="px-4 py-3 text-right">Total</th>
                     </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-800">
+                    <tbody class="divide-y divide-slate-200">
                     @php
                         $orders = [
                             ['id' => '#1012', 'customer' => 'Alice Johnson',  'status' => 'Completed', 'total' => '$89.00'],
@@ -61,15 +61,15 @@
                     @endphp
 
                     @foreach ($orders as $order)
-                        <tr class="hover:bg-slate-800/60 transition-colors">
-                            <td class="px-4 py-3 font-medium text-slate-100">{{ $order['id'] }}</td>
-                            <td class="px-4 py-3 text-slate-400">{{ $order['customer'] }}</td>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="px-4 py-3 font-medium text-slate-900">{{ $order['id'] }}</td>
+                            <td class="px-4 py-3 text-slate-600">{{ $order['customer'] }}</td>
                             <td class="px-4 py-3">
                                 <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium {{ $statusColors[$order['status']] }}">
                                     {{ $order['status'] }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-right text-slate-100">{{ $order['total'] }}</td>
+                            <td class="px-4 py-3 text-right text-slate-900">{{ $order['total'] }}</td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -80,16 +80,16 @@
         {{-- Sidebar widgets --}}
         <div class="space-y-6">
             <div>
-                <h2 class="text-sm font-semibold text-slate-100 mb-3">Quick actions</h2>
-                <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-3">
+                <h2 class="text-sm font-semibold text-slate-900 mb-3">Quick actions</h2>
+                <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-3">
                     <a href="#"
-                       class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-slate-800 transition-colors"
+                       class="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white hover:opacity-90 transition"
                        style="background-color: var(--color-accent);">
                         <span class="text-base leading-none">+</span>
                         Add new product
                     </a>
                     <a href="#"
-                       class="flex items-center gap-3 rounded-md border border-slate-700 px-3 py-2 text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors">
+                       class="flex items-center gap-3 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors">
                         <span class="text-base leading-none">&#8599;</span>
                         View storefront
                     </a>
@@ -97,8 +97,8 @@
             </div>
 
             <div>
-                <h2 class="text-sm font-semibold text-slate-100 mb-3">Low stock alerts</h2>
-                <div class="rounded-xl border border-slate-800 bg-slate-900/60 p-5 space-y-3 text-sm">
+                <h2 class="text-sm font-semibold text-slate-900 mb-3">Low stock alerts</h2>
+                <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-3 text-sm">
                     @php
                         $lowStock = [
                             ['name' => 'Wireless Headphones', 'stock' => 2],
@@ -109,7 +109,7 @@
 
                     @foreach ($lowStock as $item)
                         <div class="flex items-center justify-between">
-                            <span class="text-slate-300">{{ $item['name'] }}</span>
+                            <span class="text-slate-700">{{ $item['name'] }}</span>
                             <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium text-rose-200 bg-rose-500/20">
                                 {{ $item['stock'] }} left
                             </span>

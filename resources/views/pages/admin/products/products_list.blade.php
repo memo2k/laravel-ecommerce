@@ -5,23 +5,23 @@
 @section('content')
     <div class="flex items-center justify-between mb-6">
         <div>
-            <h1 class="text-xl font-semibold tracking-tight text-white">
+            <h1 class="text-xl font-semibold tracking-tight text-slate-900">
                 Products
             </h1>
-            <p class="text-xs text-slate-400 mt-1">
+            <p class="text-xs text-slate-600 mt-1">
                 Manage the catalog for your demo storefront.
             </p>
         </div>
-        <a href="#"
+        <a href="{{ route('admin.product.edit') }}"
            class="inline-flex items-center rounded-md px-4 py-2 text-xs font-medium text-white shadow-sm"
            style="background-color: var(--color-accent);">
             + Add product
         </a>
     </div>
 
-    <div class="rounded-xl border border-slate-800 bg-slate-900/60 overflow-hidden text-sm">
+    <div class="rounded-xl border border-slate-200 bg-white overflow-hidden text-sm">
         <table class="min-w-full">
-            <thead class="bg-slate-900 border-b border-slate-800 text-xs font-medium uppercase tracking-wide text-slate-400">
+            <thead class="bg-slate-50 border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-600">
             <tr class="text-left">
                 <th class="px-4 py-3">Name</th>
                 <th class="px-4 py-3">Category</th>
@@ -31,16 +31,16 @@
                 <th class="px-4 py-3 text-right">Actions</th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800">
+            <tbody class="divide-y divide-slate-200">
             @foreach (range(1, 6) as $i)
-                <tr class="hover:bg-slate-800/60 transition-colors">
-                    <td class="px-4 py-3 text-slate-100">
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-4 py-3 text-slate-900">
                         Demo product {{ $i }}
                     </td>
-                    <td class="px-4 py-3 text-slate-400">
+                    <td class="px-4 py-3 text-slate-600">
                         Category {{ $i }}
                     </td>
-                    <td class="px-4 py-3 text-slate-100">
+                    <td class="px-4 py-3 text-slate-900">
                         ${{ 20 + $i }}.00
                     </td>
                     <td class="px-4 py-3">
@@ -48,15 +48,15 @@
                             Active
                         </span>
                     </td>
-                    <td class="px-4 py-3 text-slate-100">
+                    <td class="px-4 py-3 text-slate-900">
                         {{ 10 * $i }}
                     </td>
                     <td class="px-4 py-3 text-right">
                         <div class="inline-flex items-center gap-2 text-xs">
-                            <a href="#" class="text-sky-300 hover:text-sky-200">
+                            <a href="#" class="text-sky-600 hover:text-sky-700">
                                 Edit
                             </a>
-                            <button type="button" class="text-rose-300 hover:text-rose-200">
+                            <button type="button" class="text-rose-600 hover:text-rose-700">
                                 Delete
                             </button>
                         </div>
