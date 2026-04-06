@@ -5,15 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class OrderController extends Controller
 {
     public function index()
     {
-        return view('pages.admin.users.users_list');
+        return view('pages.admin.orders.orders_list');
     }
 
     public function edit()
     {
-        return view('pages.admin.users.user_edit');
+        return view('pages.admin.orders.order_edit');
     }
 }
