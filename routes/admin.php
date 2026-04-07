@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PermissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
@@ -14,15 +15,22 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/products', [ProductController::class, 'index'])->name('products');
     Route::get('/product/edit/{id?}', [ProductController::class, 'edit'])->name('product.edit');
     Route::post('/product/save', [ProductController::class, 'save'])->name('product.save');
+    Route::delete('/product/delete', [ProductController::class, 'delete'])->name('product.delete');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
     Route::get('/order/edit', [OrderController::class, 'edit'])->name('order.edit');
 
     Route::get('/users', [UserController::class, 'index'])->name('users');
-    Route::get('/user/edit', [UserController::class, 'edit'])->name('user.edit');
+    Route::get('/user/edit/{id?}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('/user/save', [UserController::class, 'save'])->name('user.save');
     
     Route::get('/roles', [RoleController::class, 'index'])->name('roles');
-    Route::get('/role/edit', [RoleController::class, 'edit'])->name('role.edit');
+    Route::get('/role/edit/{id?}', [RoleController::class, 'edit'])->name('role.edit');
+    Route::post('/role/save', [RoleController::class, 'save'])->name('role.save');
+
+    Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions');
+    Route::get('/permission/edit/{id?}', [PermissionController::class, 'edit'])->name('permission.edit');
+    Route::post('/permission/save', [PermissionController::class, 'save'])->name('permission.save');
 
     Route::get('/product-categories', [ProductCategoryController::class, 'index'])->name('product-categories');
     Route::get('/product-category/edit/{id?}', [ProductCategoryController::class, 'edit'])->name('product-category.edit');
