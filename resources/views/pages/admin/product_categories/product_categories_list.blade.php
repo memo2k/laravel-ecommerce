@@ -46,7 +46,7 @@
                             <a href="{{ route('admin.product-category.edit', $productCategory->id) }}" class="text-sky-600 hover:text-sky-700">
                                 Edit
                             </a>
-                            <button type="button" id="delete-category" data-id="{{ $productCategory->id }}" class="text-rose-600 hover:text-rose-700">
+                            <button type="button" class="text-rose-600 hover:text-rose-700 delete-category-button" data-id="{{ $productCategory->id }}">
                                 Delete
                             </button>
                         </div>
@@ -67,7 +67,7 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            $('#delete-category').click(function() {
+            $('.delete-category-button').on('click', function() {
                 var id = $(this).data('id');
                 if (confirm('Are you sure you want to delete this product category?')) {
                     $.ajax({
@@ -83,6 +83,9 @@
                             if (response.success) {
                                 location.reload();
                             }
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error deleting product category: ' + error);
                         }
                     });
                 }
