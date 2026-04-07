@@ -32,39 +32,80 @@
             </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">
-            @foreach (range(1, 6) as $i)
-                <tr class="hover:bg-slate-50 transition-colors">
-                    <td class="px-4 py-3 text-slate-900">
-                        Demo product {{ $i }}
-                    </td>
-                    <td class="px-4 py-3 text-slate-600">
-                        Category {{ $i }}
-                    </td>
-                    <td class="px-4 py-3 text-slate-900">
-                        ${{ 20 + $i }}.00
-                    </td>
-                    <td class="px-4 py-3">
-                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium text-emerald-200 bg-emerald-500/20">
-                            Active
-                        </span>
-                    </td>
-                    <td class="px-4 py-3 text-slate-900">
-                        {{ 10 * $i }}
-                    </td>
-                    <td class="px-4 py-3 text-right">
-                        <div class="inline-flex items-center gap-2 text-xs">
-                            <a href="#" class="text-sky-600 hover:text-sky-700">
-                                Edit
-                            </a>
-                            <button type="button" class="text-rose-600 hover:text-rose-700">
-                                Delete
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
+                @forelse ($products as $product)
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3 text-slate-900">
+                            {{ $product->name }}
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">
+                            {{ $product->productCategory->name }}
+                        </td>
+                        <td class="px-4 py-3 text-slate-900">
+                            ${{ $product->price }}
+                        </td>
+                        <td class="px-4 py-3">
+                            @if ($product->is_active)
+                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium text-black bg-emerald-200">
+                                    Active
+                                </span>
+                            @else
+                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium text-black bg-red-200">
+                                    Inactive
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-4 py-3 text-slate-900">
+                            {{ $product->stock }}
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <div class="inline-flex items-center gap-2 text-xs">
+                                <a href="{{ route('admin.product.edit', ['id' => $product->id]) }}" class="text-sky-600 hover:text-sky-700">
+                                    Edit
+                                </a>
+                                <button type="button" class="text-rose-600 hover:text-rose-700 delete-product-button" data-id="{{ $product->id }}">
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="px-4 py-3 text-center text-slate-600">
+                            No products found
+                        </td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
 @endsection
 
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.delete-product-button').on('click', function() {
+                var id = $(this).data('id');
+                if (confirm('Are you sure you want to delete this product?')) {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        url: `{{ route('admin.product.delete') }}`,
+                        type: 'DELETE',
+                        data: {
+                            product_id: id,
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                location.reload();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error deleting product: ' + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+@endsection

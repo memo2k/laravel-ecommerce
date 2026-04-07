@@ -16,6 +16,9 @@
 
     <form method="POST" action="{{ route('admin.product.save') }}" class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] text-sm">
         @csrf
+
+        <input type="hidden" name="id" value="{{ $product->id ?? '' }}">
+        
         <!-- Main column -->
         <div class="space-y-6">
             <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
@@ -29,7 +32,11 @@
                         </label>
                         <input type="text"
                                name="name"
+                               value="{{ $product->name ?? old('name') }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                               @error('name')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                               @enderror
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
@@ -37,7 +44,11 @@
                         </label>
                         <input type="text"
                                name="slug"
+                               value="{{ $product->slug ?? old('slug') }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <p class="text-xs text-slate-600 mt-1">
+                            Automatically generated from the name if not provided.
+                        </p>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
@@ -45,7 +56,10 @@
                         </label>
                         <textarea rows="4"
                                   name="description"
-                                  class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                                  class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">{{ $product->description ?? old('description') }}</textarea>
+                                  @error('description')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                               @enderror
                     </div>
                 </div>
             </div>
@@ -61,23 +75,23 @@
                         </label>
                         <input type="number" step="0.01"
                                name="price"
+                               value="{{ $product->price ?? old('price') }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                               @error('price')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                               @enderror
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Compare at price
-                        </label>
-                        <input type="number" step="0.01"
-                               name="compare_at_price"
-                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Stock quantity
+                            Stock
                         </label>
                         <input type="number"
-                               name="quantity"
+                               name="stock"
+                               value="{{ $product->stock ?? old('stock') }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                               @error('stock')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                               @enderror
                     </div>
                 </div>
             </div>
@@ -95,22 +109,26 @@
                             Category
                         </label>
                         <select
+                            name="category"
                             class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <option value="">- Select a category -</option>
                             @foreach ($productCategories as $productCategory)
-                                <option value="{{ $productCategory->id }}">{{ $productCategory->name }}</option>
+                                <option value="{{ $productCategory->id }}" @selected($product->product_category_id ?? old('category') == $productCategory->id)>{{ $productCategory->name }}</option>
                             @endforeach
                         </select>
+                        @error('category')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Status
+                    <div class="flex items-center gap-2">
+                        <label for="is_active" class="block text-xs font-medium text-slate-600 uppercase tracking-wide">
+                            Active
                         </label>
-                        <select
-                            class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                            <option>Active</option>
-                            <option>Draft</option>
-                            <option>Archived</option>
-                        </select>
+                        <input type="checkbox"
+                               name="is_active"
+                               id="is_active"
+                               @checked($product->is_active ?? old('is_active'))
+                               class="rounded border-slate-300 bg-white text-sky-500 focus:ring-sky-500 focus:ring-offset-0">
                     </div>
                 </div>
             </div>
@@ -124,10 +142,6 @@
                             class="w-full inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm"
                             style="background-color: var(--color-accent);">
                         Save product
-                    </button>
-                    <button type="button"
-                            class="w-full inline-flex items-center justify-center rounded-md px-4 py-2 text-xs font-medium border border-slate-300 text-slate-700 hover:bg-slate-100">
-                        Save as draft
                     </button>
                 </div>
             </div>
