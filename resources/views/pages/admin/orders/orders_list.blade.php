@@ -23,28 +23,34 @@
                 <th class="px-4 py-3">Date</th>
                 <th class="px-4 py-3">Total</th>
                 <th class="px-4 py-3">Status</th>
-                <th class="px-4 py-3 text-right">Actions</th>
             </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">
-            @foreach (range(1, 6) as $i)
-                <tr class="hover:bg-slate-50 transition-colors">
+            @forelse ($orders as $order)
+                <tr
+                    class="hover:bg-slate-50 transition-colors cursor-pointer"
+                    onclick="window.location='{{ route('admin.order.view', $order->id) }}'"
+                    onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location='{{ route('admin.order.view', $order->id) }}'; }"
+                    tabindex="0"
+                    role="link"
+                    aria-label="Edit order #{{ $order->id }}"
+                >
                     <td class="px-4 py-3 text-slate-900 font-mono text-xs">
-                        #{{ 1000 + $i }}
+                        #{{ $order->id }}
                     </td>
                     <td class="px-4 py-3 text-slate-900">
-                        Demo customer {{ $i }}
+                        {{ $order->customer_first_name }} {{ $order->customer_last_name }}
                     </td>
                     <td class="px-4 py-3 text-slate-600">
-                        {{ now()->subDays($i)->format('M j, Y') }}
+                        {{ $order->created_at->format('M j, Y') }}
                     </td>
                     <td class="px-4 py-3 text-slate-900">
-                        ${{ 45 + $i * 12 }}.00
+                        ${{ $order->total_amount }}.00
                     </td>
                     <td class="px-4 py-3">
                         @php
                             $statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
-                            $status = $statuses[($i - 1) % count($statuses)];
+                            $status = $order->status;
                             $badgeClass = match ($status) {
                                 'Delivered' => 'text-emerald-200 bg-emerald-500/20',
                                 'Shipped', 'Processing' => 'text-sky-200 bg-sky-500/20',
@@ -56,18 +62,14 @@
                             {{ $status }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 text-right">
-                        <div class="inline-flex items-center gap-2 text-xs">
-                            <a href="#" class="text-sky-600 hover:text-sky-700">
-                                Edit
-                            </a>
-                            <button type="button" class="text-rose-600 hover:text-rose-700">
-                                Cancel
-                            </button>
-                        </div>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="px-4 py-3 text-center text-slate-600">
+                        No orders found
                     </td>
                 </tr>
-            @endforeach
+            @endforelse
             </tbody>
         </table>
     </div>

@@ -1,0 +1,172 @@
+@extends('pages.admin.layout')
+
+@section('title', 'Order details – ShopDemo Admin')
+
+@section('content')
+    @php
+        $status = $order->status ?? 'Unknown';
+        $badgeClass = match ($status) {
+            'Delivered' => 'text-emerald-200 bg-emerald-500/20',
+            'Shipped', 'Processing' => 'text-sky-200 bg-sky-500/20',
+            'Pending' => 'text-amber-200 bg-amber-500/20',
+            'Cancelled' => 'text-rose-200 bg-rose-500/20',
+            default => 'text-slate-700 bg-slate-100',
+        };
+    @endphp
+
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-xl font-semibold tracking-tight text-slate-900">
+                Order #{{ $order->id }}
+            </h1>
+            <p class="text-xs text-slate-600 mt-1">
+                Full order information and associated order items.
+            </p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('admin.order.edit', $order->id) }}"
+               class="inline-flex items-center rounded-md px-3 py-1.5 text-xs font-medium text-white shadow-sm"
+               style="background-color: var(--color-accent);">
+                Edit order
+            </a>
+        </div>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] text-sm">
+        <div class="space-y-6">
+            <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
+                <h2 class="text-sm font-semibold text-slate-900">Order details</h2>
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Order ID</p>
+                        <p class="text-slate-900">#{{ $order->id }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">User ID</p>
+                        <p class="text-slate-900">{{ $order->user_id ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Total amount</p>
+                        <p class="text-slate-900">${{ number_format((float) ($order->total_amount ?? 0), 2) }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Status</p>
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium {{ $badgeClass }}">
+                            {{ $status }}
+                        </span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Payment method</p>
+                        <p class="text-slate-900">{{ $order->payment_method ?? '-' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
+                <h2 class="text-sm font-semibold text-slate-900">Delivery information</h2>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Delivery address</p>
+                        <p class="text-slate-900">{{ $order->delivery_address ?? '-' }}</p>
+                    </div>
+                    <div class="grid gap-4 md:grid-cols-2">
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-slate-500">City</p>
+                            <p class="text-slate-900">{{ $order->city ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-slate-500">State</p>
+                            <p class="text-slate-900">{{ $order->state ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-slate-500">ZIP</p>
+                            <p class="text-slate-900">{{ $order->zip ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-slate-500">Country</p>
+                            <p class="text-slate-900">{{ $order->country ?? '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
+                <h2 class="text-sm font-semibold text-slate-900">Order items</h2>
+                <div class="rounded-lg border border-slate-200 overflow-hidden">
+                    <table class="min-w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-600">
+                        <tr class="text-left">
+                            <th class="px-4 py-3">Product ID</th>
+                            <th class="px-4 py-3">Quantity</th>
+                            <th class="px-4 py-3">Price</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                        @forelse ($order->orderProducts ?? [] as $item)
+                            <tr>
+                                <td class="px-4 py-3 text-slate-900">{{ $item->product_id }}</td>
+                                <td class="px-4 py-3 text-slate-900">{{ $item->quantity }}</td>
+                                <td class="px-4 py-3 text-slate-900">
+                                    ${{ number_format((float) ($item->price ?? 0), 2) }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="px-4 py-3 text-center text-slate-600">
+                                    No order items found
+                                </td>
+                            </tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
+                <h2 class="text-sm font-semibold text-slate-900">Customer information</h2>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">First name</p>
+                        <p class="text-slate-900">{{ $order->customer_first_name ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Last name</p>
+                        <p class="text-slate-900">{{ $order->customer_last_name ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Email</p>
+                        <p class="text-slate-900">{{ $order->customer_email ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Phone</p>
+                        <p class="text-slate-900">{{ $order->customer_phone ?? '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Customer notes</p>
+                        <p class="text-slate-900 whitespace-pre-wrap">{{ $order->customer_notes ?? '-' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
+                <h2 class="text-sm font-semibold text-slate-900">Timestamps</h2>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Created at</p>
+                        <p class="text-slate-900">
+                            {{ $order->created_at ? $order->created_at->format('Y-m-d H:i:s') : '-' }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Updated at</p>
+                        <p class="text-slate-900">
+                            {{ $order->updated_at ? $order->updated_at->format('Y-m-d H:i:s') : '-' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

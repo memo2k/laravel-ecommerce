@@ -3,47 +3,86 @@
 @section('title', 'Edit order – ShopDemo Admin')
 
 @section('content')
+    @php
+        $isEdit = !empty($order?->id);
+        $statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+    @endphp
+
     <div class="flex items-center justify-between mb-6">
         <div>
             <h1 class="text-xl font-semibold tracking-tight text-slate-900">
-                Edit order
+                {{ $isEdit ? 'Edit order' : 'Create order' }}
             </h1>
             <p class="text-xs text-slate-600 mt-1">
-                Update fulfillment status, shipping details, and internal notes.
+                Manage all order details from the orders table.
             </p>
         </div>
-        <a href="#"
+        <a href="{{ route('admin.orders') }}"
            class="inline-flex items-center rounded-md px-3 py-1.5 text-xs font-medium text-slate-700 border border-slate-300 hover:bg-slate-100">
             Back to orders
         </a>
     </div>
 
-    <form class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] text-sm">
+    @if ($errors->any())
+        <div class="mb-6 rounded-md border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            Please correct the highlighted fields and try again.
+        </div>
+    @endif
+
+    <form action="{{ route('admin.order.save') }}" method="POST" class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] text-sm">
+        @csrf
+        <input type="hidden" name="id" value="{{ old('id', $order->id) }}">
+
         <div class="space-y-6">
             <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
                 <h2 class="text-sm font-semibold text-slate-900">
-                    Order summary
+                    Order details
                 </h2>
                 <div class="grid gap-4 md:grid-cols-2">
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Order number
+                            ID
                         </label>
-                        <input type="text" value="#1001" readonly
+                        <input type="text" value="{{ $order->id ?? 'New order' }}" readonly
                                class="block w-full rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-500 cursor-not-allowed">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Placed on
+                            User ID
                         </label>
-                        <input type="text"
+                        <input type="number" min="1" name="user_id"
+                               value="{{ old('user_id', $order->user_id) }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Total amount
+                        </label>
+                        <input type="number" step="0.01" min="0" name="total_amount"
+                               value="{{ old('total_amount', $order->total_amount) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Status
+                        </label>
+                        <select name="status"
+                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            @foreach ($statuses as $status)
+                                <option value="{{ $status }}" @selected(old('status', $order->status) === $status)>
+                                    {{ $status }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <div class="md:col-span-2">
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Customer
+                            Payment method
                         </label>
-                        <input type="text"
+                        <input type="text" name="payment_method"
+                               value="{{ old('payment_method', $order->payment_method) }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                 </div>
@@ -51,21 +90,48 @@
 
             <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
                 <h2 class="text-sm font-semibold text-slate-900">
-                    Shipping
+                    Delivery information
                 </h2>
-                <div class="space-y-4">
+                <div class="grid gap-4 md:grid-cols-2">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Delivery address
+                        </label>
+                        <input type="text" name="delivery_address"
+                               value="{{ old('delivery_address', $order->delivery_address) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Shipping address
+                            City
                         </label>
-                        <textarea rows="3"
-                                  class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
+                        <input type="text" name="city"
+                               value="{{ old('city', $order->city) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Tracking number
+                            State
                         </label>
-                        <input type="text"
+                        <input type="text" name="state"
+                               value="{{ old('state', $order->state) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            ZIP
+                        </label>
+                        <input type="text" name="zip"
+                               value="{{ old('zip', $order->zip) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Country
+                        </label>
+                        <input type="text" name="country"
+                               value="{{ old('country', $order->country) }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                 </div>
@@ -75,46 +141,76 @@
         <div class="space-y-6">
             <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
                 <h2 class="text-sm font-semibold text-slate-900">
-                    Status
+                    Customer information
                 </h2>
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Fulfillment
+                            First name
                         </label>
-                        <select
-                            class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                            <option>Pending</option>
-                            <option>Processing</option>
-                            <option>Shipped</option>
-                            <option>Delivered</option>
-                            <option>Cancelled</option>
-                        </select>
+                        <input type="text" name="customer_first_name"
+                               value="{{ old('customer_first_name', $order->customer_first_name) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Internal notes
+                            Last name
                         </label>
-                        <textarea rows="4"
-                                  class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                                  placeholder="Visible to staff only."></textarea>
+                        <input type="text" name="customer_last_name"
+                               value="{{ old('customer_last_name', $order->customer_last_name) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Phone
+                        </label>
+                        <input type="text" name="customer_phone"
+                               value="{{ old('customer_phone', $order->customer_phone) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Email
+                        </label>
+                        <input type="email" name="customer_email"
+                               value="{{ old('customer_email', $order->customer_email) }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Customer notes
+                        </label>
+                        <textarea rows="4" name="customer_notes"
+                                  class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">{{ old('customer_notes', $order->customer_notes) }}</textarea>
                     </div>
                 </div>
             </div>
 
             <div class="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
-                <h2 class="text-sm font-semibold text-slate-900">
-                    Actions
-                </h2>
-                <div class="space-y-3">
+                <h2 class="text-sm font-semibold text-slate-900">Metadata</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Created at
+                        </label>
+                        <input type="text"
+                               value="{{ $order->created_at ? $order->created_at->format('Y-m-d H:i:s') : '-' }}"
+                               readonly
+                               class="block w-full rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-500 cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Updated at
+                        </label>
+                        <input type="text"
+                               value="{{ $order->updated_at ? $order->updated_at->format('Y-m-d H:i:s') : '-' }}"
+                               readonly
+                               class="block w-full rounded-md border border-slate-300 bg-slate-100 px-3 py-2 text-sm text-slate-500 cursor-not-allowed">
+                    </div>
                     <button type="submit"
                             class="w-full inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-white shadow-sm"
                             style="background-color: var(--color-accent);">
                         Save order
-                    </button>
-                    <button type="button"
-                            class="w-full inline-flex items-center justify-center rounded-md px-4 py-2 text-xs font-medium border border-slate-300 text-slate-700 hover:bg-slate-100">
-                        Email customer
                     </button>
                 </div>
             </div>
