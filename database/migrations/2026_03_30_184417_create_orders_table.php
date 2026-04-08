@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->double('total_amount', 10, 2);
             $table->string('status');
             $table->string('payment_method');
@@ -30,7 +30,6 @@ return new class extends Migration
             
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            
             $table->timestamps();
         });
     }
