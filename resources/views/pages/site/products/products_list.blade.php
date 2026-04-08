@@ -56,11 +56,11 @@
                                     <input
                                         type="radio"
                                         name="category"
-                                        value="{{ $category }}"
-                                        @checked($selectedCategory === $category)
+                                        value="{{ $category->id }}"
+                                        @checked((string) $selectedCategory === (string) $category->id)
                                         class="h-4 w-4 border-slate-300 text-slate-700 focus:ring-slate-300"
                                     >
-                                    <span>{{ $category }}</span>
+                                    <span>{{ $category->name }}</span>
                                 </label>
                             @endforeach
 
@@ -107,6 +107,8 @@
                         <form method="GET" action="{{ route('products.index') ?? '#' }}" class="flex items-center gap-2">
                             <input type="hidden" name="q" value="{{ $search }}">
                             <input type="hidden" name="category" value="{{ $selectedCategory }}">
+                            <input type="hidden" name="min_price" value="{{ request('min_price') }}">
+                            <input type="hidden" name="max_price" value="{{ request('max_price') }}">
                             <label for="sort" class="text-xs font-medium text-slate-700 uppercase tracking-wide">
                                 Sort
                             </label>
@@ -125,15 +127,15 @@
                 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                     @forelse ($products as $product)
                         <article class="rounded-xl border border-slate-200 bg-white p-4 flex flex-col gap-3">
-                            <a href="{{ route('product.show', ['product' => $product->id]) ?? '#' }}"
+                            <a href="{{ route('product.show', $product->slug) }}"
                                class="block aspect-[4/3] rounded-lg bg-slate-100 border border-slate-200"></a>
 
                             <div>
                                 <p class="text-xs font-medium text-slate-500 mb-1">
-                                    {{ $product->category ?? 'Category' }}
+                                    {{ $product->productCategory?->name ?? 'Category' }}
                                 </p>
                                 <h3 class="text-sm font-semibold text-slate-900">
-                                    <a href="{{ route('product.show', ['product' => $product->id]) ?? '#' }}"
+                                    <a href="{{ route('product.show', $product->slug) }}"
                                        class="hover:underline">
                                         {{ $product->name ?? 'Product name' }}
                                     </a>
