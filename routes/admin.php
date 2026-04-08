@@ -18,8 +18,10 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::delete('/product/delete', [ProductController::class, 'delete'])->name('product.delete');
 
     Route::get('/orders', [OrderController::class, 'index'])->name('orders');
-    Route::get('/order/edit', [OrderController::class, 'edit'])->name('order.edit');
-
+    Route::get('/order/view/{id}', [OrderController::class, 'view'])->name('order.view');
+    Route::get('/order/edit/{id?}', [OrderController::class, 'edit'])->name('order.edit');
+    Route::post('/order/save', [OrderController::class, 'save'])->name('order.save');
+    
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::get('/user/edit/{id?}', [UserController::class, 'edit'])->name('user.edit');
     Route::post('/user/save', [UserController::class, 'save'])->name('user.save');

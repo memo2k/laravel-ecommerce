@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::get('/products', [SiteProductController::class, 'index'])->name('products.index');
-Route::get('/product', [SiteProductController::class, 'show'])->name('product.show');
+Route::get('/product/{slug}', [SiteProductController::class, 'show'])->name('product.show');
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
