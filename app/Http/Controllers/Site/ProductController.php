@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cart;
+use App\Models\CartProduct;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -85,5 +88,38 @@ class ProductController extends Controller
         return view('pages.site.products.product', [
             'product' => $product,
         ]);
+    }
+
+    public function addToCart(Request $request)
+    {
+        $user = Auth::user();
+        $cart = null;
+
+        if ($user) {
+            $cart = Cart::query()->firstOrCreate([
+                'user_id' => $user->id,
+            ]);
+        } else {
+            $guestCartId = $request->session()->get('guest_cart_id');
+
+            if ($guestCartId) {
+                $cart = Cart::query()->find($guestCartId);
+            }
+
+            if (!$cart) {
+                $cart = Cart::query()->create(['user_id' => null]);
+                $request->session()->put('guest_cart_id', $cart->id);
+            }
+        }
+
+        $cartProduct = CartProduct::query()->firstOrNew([
+            'cart_id' => $cart->id,
+            'product_id' => $request->product_id,
+        ]);
+
+        $cartProduct->quantity = ($cartProduct->exists ? $cartProduct->quantity : 0) + (int) ($request->quantity ?? 1);
+        $cartProduct->save();
+
+        return response()->json(['success' => true, 'message' => 'Product added to cart successfully']);
     }
 }
