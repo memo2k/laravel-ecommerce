@@ -17,9 +17,6 @@
                 <a href="{{ route('products.index') ?? '#' }}" class="hover:underline">
                     Products
                 </a>
-                <a href="{{ route('cart.index') ?? '#' }}" class="hover:underline">
-                    Cart
-                </a>
             </nav>
 
             <!-- Auth + cart -->
@@ -46,13 +43,9 @@
                         Register
                     </a>
                 @endauth
-                <a href="{{ route('cart.index') ?? '#' }}"
-                   class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-medium hover:bg-white/20 transition-colors">
-                    <span class="mr-1">Cart</span>
-                    <span class="inline-flex items-center justify-center rounded-full bg-white/20 px-2 py-0.5 text-[11px]">
-                        0
-                    </span>
-                </a>
+                <div class="relative group" id="cart_preview">
+                    @include('pages.components.cart_preview')
+                </div>
             </div>
         </div>
     </div>
