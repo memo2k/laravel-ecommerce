@@ -155,7 +155,8 @@
                                 </div>
 
                                 <button type="button"
-                                        class="rounded-full px-3 py-1.5 text-xs font-medium text-white"
+                                        data-product-id="{{ $product->id }}"
+                                        class="rounded-full px-3 py-1.5 text-xs font-medium text-white add-to-cart"
                                         style="background-color: var(--color-accent);">
                                     Add
                                 </button>
@@ -171,4 +172,30 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.add-to-cart').on('click', function() {
+                console.log('click');
+                var productId = $(this).data('product-id');
+
+                $.ajax({
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    url: '{{ route('add-to-cart') }}',
+                    type: 'POST',
+                    data: {
+                        product_id: productId,
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function(response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
