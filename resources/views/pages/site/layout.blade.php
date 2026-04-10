@@ -12,6 +12,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'ShopDemo')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body
     class="min-h-screen flex flex-col bg-slate-50 text-slate-900"
@@ -28,6 +30,8 @@
     </main>
 
     @include('pages.components.footer')
+
+    @yield('scripts')
 </body>
 </html>
 
