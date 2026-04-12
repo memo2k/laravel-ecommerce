@@ -32,6 +32,39 @@
     @include('pages.components.footer')
 
     @yield('scripts')
+
+    <script>
+        $(document).on('click', '.remove-product-btn', function() {
+            var productId = $(this).data('product-id');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: '{{ route('remove-from-cart') }}',
+                type: 'POST',
+                data: { product_id: productId, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    $('#cart_preview').html(response.htmlContent);
+                }
+            });
+        });
+
+        $(document).on('click', '.update-cart-quantity-btn', function() {
+            var productId = $(this).data('product-id');
+            var action = $(this).data('action');
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: '{{ route('update-cart-quantity') }}',
+                type: 'POST',
+                data: { product_id: productId, action: action, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    $('#cart_preview').html(response.htmlContent);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 
