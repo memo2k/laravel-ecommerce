@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\CartProduct;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Repositories\CartRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -120,6 +121,38 @@ class ProductController extends Controller
         $cartProduct->quantity = ($cartProduct->exists ? $cartProduct->quantity : 0) + (int) ($request->quantity ?? 1);
         $cartProduct->save();
 
-        return response()->json(['success' => true, 'message' => 'Product added to cart successfully']);
+        $cartData = (new CartRepository())->getCartData();
+
+        $htmlContent = view('pages.components.cart_preview', ['cartData' => $cartData])->render();
+
+        return response()->json(['success' => true, 'message' => 'Product added to cart successfully', 'htmlContent' => $htmlContent]);
     }
+
+    public function removeFromCart(Request $request)
+    {
+        $cartProduct = CartProduct::query()->find($request->product_id);
+        $cartProduct->delete();
+
+        $cartData = (new CartRepository())->getCartData();
+        $htmlContent = view('pages.components.cart_preview', ['cartData' => $cartData])->render();
+
+        return response()->json(['success' => true, 'message' => 'Product removed from cart successfully', 'htmlContent' => $htmlContent]);
+    }
+
+    public function updateCartQuantity(Request $request)
+    {
+        $cartProduct = CartProduct::query()->find($request->product_id);
+        $cartProduct->quantity = $request->action == 'increment' ? $cartProduct->quantity + 1 : $cartProduct->quantity - 1;
+        $cartProduct->save();
+
+        if ($cartProduct->quantity <= 0) {
+            $cartProduct->delete();
+        }
+
+        $cartData = (new CartRepository())->getCartData();
+        $htmlContent = view('pages.components.cart_preview', ['cartData' => $cartData])->render();
+
+        return response()->json(['success' => true, 'message' => 'Cart quantity updated successfully', 'htmlContent' => $htmlContent]);
+    }
+
 }
