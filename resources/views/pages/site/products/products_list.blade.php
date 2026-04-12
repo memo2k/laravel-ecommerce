@@ -192,7 +192,7 @@
                         _token: '{{ csrf_token() }}',
                     },
                     success: function(response) {
-                        console.log(response);
+                        $('#cart_preview').html(response.htmlContent);
                     }
                 });
             });
