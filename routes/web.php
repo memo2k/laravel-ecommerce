@@ -22,5 +22,7 @@ Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 
 Route::post('/add-to-cart', [SiteProductController::class, 'addToCart'])->name('add-to-cart');
+Route::post('/remove-from-cart', [SiteProductController::class, 'removeFromCart'])->name('remove-from-cart');
+Route::post('/update-cart-quantity', [SiteProductController::class, 'updateCartQuantity'])->name('update-cart-quantity');
 
 require __DIR__.'/auth.php';
