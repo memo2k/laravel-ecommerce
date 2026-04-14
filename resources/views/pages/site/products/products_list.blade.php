@@ -173,29 +173,3 @@
         </div>
     </section>
 @endsection
-
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            $('.add-to-cart').on('click', function() {
-                console.log('click');
-                var productId = $(this).data('product-id');
-
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    url: '{{ route('add-to-cart') }}',
-                    type: 'POST',
-                    data: {
-                        product_id: productId,
-                        _token: '{{ csrf_token() }}',
-                    },
-                    success: function(response) {
-                        $('#cart_preview').html(response.htmlContent);
-                    }
-                });
-            });
-        });
-    </script>
-@endsection

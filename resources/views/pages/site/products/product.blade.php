@@ -40,27 +40,14 @@
                     {{ $product->description }}
                 </p>
 
-                <form class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <label class="text-xs font-medium text-slate-700 uppercase tracking-wide">
-                            Quantity
-                        </label>
-                        <input type="number" min="1" value="1"
-                               class="w-20 rounded-md border border-slate-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300">
-                    </div>
-
-                    <div class="flex flex-wrap gap-3">
-                        <button type="submit"
-                                class="inline-flex items-center rounded-md px-5 py-2.5 text-sm font-medium text-white shadow-sm"
-                                style="background-color: var(--color-accent);">
-                            Add to cart
-                        </button>
-                        <button type="button"
-                                class="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium border border-slate-300 text-slate-700 bg-white hover:bg-slate-50">
-                            Save for later
-                        </button>
-                    </div>
-                </form>
+                <div class="flex flex-wrap gap-3">
+                    <button type="button"
+                            data-product-id="{{ $product->id }}"
+                            class="inline-flex items-center rounded-md px-5 py-2.5 text-sm font-medium text-white shadow-sm add-to-cart"
+                            style="background-color: var(--color-accent);">
+                        Add to cart
+                    </button>
+                </div>
 
                 <div class="border-t border-slate-200 pt-4 text-xs text-slate-500 space-y-1">
                     <div>• Stock available: {{ max((int) $product->stock, 0) }}</div>
@@ -72,4 +59,3 @@
         </div>
     </div>
 @endsection
-
