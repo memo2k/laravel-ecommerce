@@ -93,21 +93,21 @@
                     </h2>
 
                     <div class="space-y-3 mb-4">
-                        @foreach (range(1, 2) as $i)
+                        @foreach ($cartData['items'] as $item)
                             <div class="flex items-center justify-between text-sm">
                                 <div class="flex items-center gap-3">
                                     <div class="h-10 w-10 rounded-md bg-slate-100 flex-shrink-0"></div>
                                     <div>
                                         <div class="font-medium text-slate-900">
-                                            Demo product {{ $i }}
+                                            {{ $item['name'] }}
                                         </div>
                                         <div class="text-xs text-slate-500">
-                                            Qty 1
+                                            Qty {{ $item['quantity'] }}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="font-medium text-slate-900">
-                                    $29.00
+                                    ${{ number_format($item['price'] * $item['quantity'], 2) }}
                                 </div>
                             </div>
                         @endforeach
@@ -116,24 +116,23 @@
                     <dl class="space-y-2 text-sm">
                         <div class="flex items-center justify-between">
                             <dt class="text-slate-500">Subtotal</dt>
-                            <dd class="font-medium text-slate-900">$58.00</dd>
+                            <dd class="font-medium text-slate-900">${{ $cartData['totalPrice'] }}</dd>
                         </div>
                         <div class="flex items-center justify-between">
                             <dt class="text-slate-500">Shipping</dt>
-                            <dd class="text-slate-500">$5.00</dd>
+                            <dd class="text-slate-500">Calculated at checkout</dd>
                         </div>
                         <div class="border-t border-slate-200 pt-3 mt-2 flex items-center justify-between">
                             <dt class="font-semibold text-slate-900">Total</dt>
-                            <dd class="font-semibold text-slate-900">$63.00</dd>
+                            <dd class="font-semibold text-slate-900">${{ $cartData['totalPrice'] }}</dd>
                         </div>
                     </dl>
                 </div>
 
                 <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
                     <p class="mb-1 font-medium text-slate-700">
-                        Demo notice
+                        This checkout is for portfolio/demo purposes. Hook it to real payment logic when you are ready.
                     </p>
-                    <p>This checkout is for portfolio/demo purposes. Hook it to real payment logic when you are ready.</p>
                 </div>
             </aside>
         </div>
