@@ -34,17 +34,38 @@
     @yield('scripts')
 
     <script>
+        function showCartPreviewPanel() {
+            var $panel = $('#cart_preview_panel');
+            if (!$panel.length) {
+                return;
+            }
+            $('#cart_preview').attr('data-cart-preview-open', '1');
+            $panel.removeClass('invisible opacity-0 translate-y-1').addClass('visible opacity-100 translate-y-0');
+        }
+
+        $(document).on('mouseenter', '#cart_preview', function() {
+            var $wrap = $(this);
+            if ($wrap.attr('data-cart-preview-open') !== '1') {
+                return;
+            }
+            $wrap.removeAttr('data-cart-preview-open');
+            $('#cart_preview_panel')
+                .removeClass('visible opacity-100 translate-y-0')
+                .addClass('invisible opacity-0 translate-y-1');
+        });
+
         $(document).on('click', '.remove-product-btn', function() {
             var productId = $(this).data('product-id');
             $.ajax({
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                url: '{{ route('remove-from-cart') }}',
+                url: '{{ route('cart.remove-product') }}',
                 type: 'POST',
                 data: { product_id: productId, _token: '{{ csrf_token() }}' },
                 success: function(response) {
-                    $('#cart_preview').html(response.htmlContent);
+                    $('#cart_products').html(response.cartProductsContent);
+                    $('#cart_preview').html(response.cartPreviewContent);
                 }
             });
         });
@@ -56,11 +77,35 @@
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                url: '{{ route('update-cart-quantity') }}',
+                url: '{{ route('cart.update-quantity') }}',
                 type: 'POST',
                 data: { product_id: productId, action: action, _token: '{{ csrf_token() }}' },
                 success: function(response) {
-                    $('#cart_preview').html(response.htmlContent);
+                    $('#cart_products').html(response.cartProductsContent);
+                    $('#cart_preview').html(response.cartPreviewContent);
+                }
+            });
+        });
+
+        $(document).on('click', '.add-to-cart', function() {
+            var productId = $(this).data('product-id');
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                url: '{{ route('cart.add-to-cart') }}',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    product_id: productId,
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) {
+                    if (response.htmlContent) {
+                        $('#cart_preview').html(response.htmlContent);
+                        showCartPreviewPanel();
+                    }
                 }
             });
         });
