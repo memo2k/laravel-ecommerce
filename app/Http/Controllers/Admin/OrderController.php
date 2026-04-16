@@ -11,7 +11,7 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::all();
+        $orders = Order::orderBy('created_at', 'desc')->get();
 
         return view('pages.admin.orders.orders_list', [
             'orders' => $orders,
@@ -44,7 +44,6 @@ class OrderController extends Controller
             'payment_method' => 'required|string',
             'delivery_address' => 'required|string',
             'city' => 'required|string',
-            'state' => 'required|string',
             'zip' => 'required|string',
             'country' => 'required|string',
             'customer_phone' => 'required|string',
