@@ -30,11 +30,12 @@ class CartRepository
 
         $cartItems = $cartId
             ? CartProduct::query()->with('product')->where('cart_id', $cartId)->get()
-            : new Collection();
+            : new Collection;
 
         $items = $cartItems->map(function ($item) {
             return [
                 'id' => $item->id,
+                'product_id' => $item->product_id,
                 'name' => $item->product->name ?? 'Product',
                 'quantity' => $item->quantity,
                 'price' => (float) ($item->product->price ?? 0),
