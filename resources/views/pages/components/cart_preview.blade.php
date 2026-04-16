@@ -1,7 +1,7 @@
 <a href="{{ route('cart.index') ?? '#' }}"
-    class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-medium hover:bg-white/20 transition-colors">
+    class="inline-flex items-center rounded-full border border-stone-300/80 bg-white px-3 py-1 text-xs font-medium text-slate-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50">
     <span class="mr-1">Cart</span>
-    <span class="inline-flex items-center justify-center rounded-full bg-white/20 px-2 py-0.5 text-[11px]">
+    <span class="inline-flex items-center justify-center rounded-full bg-stone-200/90 px-2 py-0.5 text-[11px] text-slate-800">
         {{ $cartData['totalProducts'] }}
     </span>
 </a>
