@@ -52,10 +52,11 @@
                             $statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
                             $status = $order->status;
                             $badgeClass = match ($status) {
-                                'Delivered' => 'text-emerald-200 bg-emerald-500/20',
-                                'Shipped', 'Processing' => 'text-sky-200 bg-sky-500/20',
-                                'Pending' => 'text-amber-200 bg-amber-500/20',
-                                default => 'text-slate-700 bg-slate-100',
+                                'Delivered' => 'text-emerald-900 bg-emerald-100 ring-1 ring-inset ring-emerald-600/15',
+                                'Shipped', 'Processing' => 'text-sky-900 bg-sky-100 ring-1 ring-inset ring-sky-600/15',
+                                'Pending' => 'text-amber-900 bg-amber-100 ring-1 ring-inset ring-amber-600/15',
+                                'Cancelled' => 'text-rose-900 bg-rose-100 ring-1 ring-inset ring-rose-600/15',
+                                default => 'text-slate-800 bg-slate-100 ring-1 ring-inset ring-slate-400/20',
                             };
                         @endphp
                         <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium {{ $badgeClass }}">
