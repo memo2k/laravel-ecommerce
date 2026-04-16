@@ -15,12 +15,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::prefix('checkout')->name('checkout.')->group(function () {
+    Route::get('/', [CheckoutController::class, 'index'])->name('index');
+    Route::post('/', [CheckoutController::class, 'store'])->name('store');
+    Route::get('/order-summary', [CheckoutController::class, 'orderSummary'])->name('order-summary');
+});
+
 Route::get('/products', [SiteProductController::class, 'index'])->name('products.index');
 Route::get('/product/{slug}', [SiteProductController::class, 'show'])->name('product.show');
 Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
-Route::prefix('cart')->name('cart.')->middleware('auth')->group(function () {
+Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('/add-to-cart', [CartController::class, 'addToCart'])->name('add-to-cart');
     Route::post('/remove-product', [CartController::class, 'removeProduct'])->name('remove-product');
