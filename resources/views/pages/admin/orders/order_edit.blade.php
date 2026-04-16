@@ -5,7 +5,7 @@
 @section('content')
     @php
         $isEdit = !empty($order?->id);
-        $statuses = ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+        $statuses = \App\Constants\OrderStatusConstant::ORDER_STATUSES;
     @endphp
 
     <div class="flex items-center justify-between mb-6">
@@ -17,10 +17,6 @@
                 Manage all order details from the orders table.
             </p>
         </div>
-        <a href="{{ route('admin.orders') }}"
-           class="inline-flex items-center rounded-md px-3 py-1.5 text-xs font-medium text-slate-700 border border-slate-300 hover:bg-slate-100">
-            Back to orders
-        </a>
     </div>
 
     @if ($errors->any())
