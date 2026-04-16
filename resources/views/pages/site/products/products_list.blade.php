@@ -14,10 +14,6 @@
                         Discover simple, clean product cards with practical filters.
                     </p>
                 </div>
-                <a href="{{ route('cart.index') ?? '#' }}"
-                   class="inline-flex items-center rounded-md px-4 py-2 text-sm font-medium border border-slate-300 text-slate-700 bg-white hover:bg-slate-50">
-                    View cart
-                </a>
             </div>
         </div>
     </section>
