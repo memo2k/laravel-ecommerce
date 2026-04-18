@@ -9,7 +9,7 @@
             'Delivered' => 'text-emerald-900 bg-emerald-100 ring-1 ring-inset ring-emerald-600/15',
             'Shipped', 'Processing' => 'text-sky-900 bg-sky-100 ring-1 ring-inset ring-sky-600/15',
             'Pending' => 'text-amber-900 bg-amber-100 ring-1 ring-inset ring-amber-600/15',
-            'Cancelled' => 'text-rose-900 bg-rose-100 ring-1 ring-inset ring-rose-600/15',
+            'Unpaid', 'Cancelled' => 'text-rose-900 bg-rose-100 ring-1 ring-inset ring-rose-600/15',
             default => 'text-slate-800 bg-slate-100 ring-1 ring-inset ring-slate-400/20',
         };
     @endphp
@@ -42,8 +42,8 @@
                         <p class="text-slate-900">#{{ $order->id }}</p>
                     </div>
                     <div>
-                        <p class="text-xs uppercase tracking-wide text-slate-500">User ID</p>
-                        <p class="text-slate-900">{{ $order->user_id ?? '-' }}</p>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Customer</p>
+                        <p class="text-slate-900">{{ $order->customer_first_name }} {{ $order->customer_last_name }} ({{ $order->customer_email }})</p>
                     </div>
                     <div>
                         <p class="text-xs uppercase tracking-wide text-slate-500">Total amount</p>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="md:col-span-2">
                         <p class="text-xs uppercase tracking-wide text-slate-500">Payment method</p>
-                        <p class="text-slate-900">{{ $order->payment_method ?? '-' }}</p>
+                        <p class="text-slate-900">{{ \App\Constants\PaymentMethodConstant::PAYMENT_METHODS[$order->payment_method] ?? '-' }}</p>
                     </div>
                 </div>
             </div>

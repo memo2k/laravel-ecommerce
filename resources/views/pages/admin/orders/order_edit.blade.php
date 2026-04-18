@@ -44,15 +44,6 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            User ID
-                        </label>
-                        <input type="number" min="1" name="user_id"
-                               value="{{ old('user_id', $order->user_id) }}"
-                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
                             Total amount
                         </label>
                         <input type="number" step="0.01" min="0" name="total_amount"
@@ -73,13 +64,18 @@
                         </select>
                     </div>
 
-                    <div class="md:col-span-2">
+                    <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
                             Payment method
                         </label>
-                        <input type="text" name="payment_method"
-                               value="{{ old('payment_method', $order->payment_method) }}"
-                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                        <select name="payment_method"
+                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            @foreach (\App\Constants\PaymentMethodConstant::PAYMENT_METHODS as $key => $value)
+                                <option value="{{ $key }}" @selected(old('payment_method', $order->payment_method) === $key)>
+                                    {{ $value }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -171,13 +167,6 @@
                         <input type="email" name="customer_email"
                                value="{{ old('customer_email', $order->customer_email) }}"
                                class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
-                            Customer notes
-                        </label>
-                        <textarea rows="4" name="customer_notes"
-                                  class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">{{ old('customer_notes', $order->customer_notes) }}</textarea>
                     </div>
                 </div>
             </div>
