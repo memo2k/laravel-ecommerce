@@ -4,6 +4,7 @@ namespace App\Constants;
 
 class OrderStatusConstant
 {
+    const UNPAID = 'Unpaid';
     const PENDING = 'Pending';
     const PROCESSING = 'Processing';
     const SHIPPED = 'Shipped';
@@ -11,6 +12,7 @@ class OrderStatusConstant
     const CANCELLED = 'Cancelled';
 
     const ORDER_STATUSES = [
+        self::UNPAID,
         self::PENDING,
         self::PROCESSING,
         self::SHIPPED,
