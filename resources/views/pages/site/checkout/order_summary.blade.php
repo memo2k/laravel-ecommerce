@@ -50,8 +50,18 @@
                     <div>
                         <dt class="text-slate-500">Status</dt>
                         <dd class="mt-0.5">
-                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium text-amber-900 bg-amber-100 ring-1 ring-inset ring-amber-600/15">
-                                {{ $order->status ?? 'Pending' }}
+                            @php
+                                $status = $order->status ?? 'Pending';
+                                $statusBadgeClass = match ($status) {
+                                    'Delivered' => 'text-emerald-900 bg-emerald-100 ring-emerald-600/15',
+                                    'Shipped', 'Processing' => 'text-sky-900 bg-sky-100 ring-sky-600/15',
+                                    'Pending' => 'text-amber-900 bg-amber-100 ring-amber-600/15',
+                                    'Unpaid', 'Cancelled' => 'text-rose-900 bg-rose-100 ring-rose-600/15',
+                                    default => 'text-slate-800 bg-slate-100 ring-slate-400/20',
+                                };
+                            @endphp
+                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset {{ $statusBadgeClass }}">
+                                {{ $status }}
                             </span>
                         </dd>
                     </div>
