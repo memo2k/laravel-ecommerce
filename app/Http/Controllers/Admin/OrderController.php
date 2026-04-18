@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderStatusMail;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
@@ -57,7 +59,10 @@ class OrderController extends Controller
             return redirect()->back()->withErrors($validation)->withInput();
         }
 
+        
         $order = $request->id ? Order::find($request->id) : new Order();
+        $previousStatus = $order->status;
+
         $order->total_amount = $request->total_amount;
         $order->status = $request->status;
         $order->payment_method = $request->payment_method;
@@ -72,6 +77,11 @@ class OrderController extends Controller
         $order->customer_last_name = $request->customer_last_name;
         $order->customer_notes = $request->customer_notes;
         $order->save();
+        
+        if($request->status !== $previousStatus) {
+            $newOrderStatusMail = new OrderStatusMail($order, $request->status);
+            Mail::to($order->customer_email)->send($newOrderStatusMail);
+        }
 
         return redirect()->route('admin.order.view', $order->id)->with('success', 'Order saved successfully');
     }
