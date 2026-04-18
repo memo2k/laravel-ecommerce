@@ -5,17 +5,20 @@ namespace App\Http\Controllers\Site;
 use App\Constants\OrderStatusConstant;
 use App\Constants\PaymentMethodConstant;
 use App\Http\Controllers\Controller;
+use App\Mail\OrderPlaceMail;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Repositories\CartRepository;
 use App\Services\CartService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class CheckoutController extends Controller
 {
     protected $cartRepository;
+
     protected $cartService;
 
     public function __construct(CartRepository $cartRepository, CartService $cartService)
@@ -58,7 +61,7 @@ class CheckoutController extends Controller
         $cartData = $this->cartRepository->getCartData();
 
         $order = Order::create([
-            'user_id' => Auth::user()->id,
+            'user_id' => Auth::user()->id ?? null,
             'total_amount' => $cartData['totalPrice'],
             'status' => OrderStatusConstant::PENDING,
             'payment_method' => PaymentMethodConstant::PAYMENT_METHODS[$request->payment_method],
@@ -82,6 +85,8 @@ class CheckoutController extends Controller
                 'total' => $item['price'] * $item['quantity'],
             ]);
         }
+
+        Mail::to($order->customer_email)->send(new OrderPlaceMail($order));
 
         $this->cartService->clearCart();
 
