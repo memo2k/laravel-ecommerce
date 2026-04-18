@@ -64,7 +64,7 @@ class CheckoutController extends Controller
             'user_id' => Auth::user()->id ?? null,
             'total_amount' => $cartData['totalPrice'],
             'status' => OrderStatusConstant::PENDING,
-            'payment_method' => PaymentMethodConstant::PAYMENT_METHODS[$request->payment_method],
+            'payment_method' => $request->payment_method,
             'delivery_address' => $request->address,
             'city' => $request->city,
             'zip' => $request->zip,
@@ -89,6 +89,18 @@ class CheckoutController extends Controller
         Mail::to($order->customer_email)->send(new OrderPlaceMail($order));
 
         $this->cartService->clearCart();
+
+        if ($request->payment_method === PaymentMethodConstant::CARD) {
+            return $request->user()->checkoutCharge(
+                round($order->total_amount * 100),
+                'Order #'.$order->id,
+                1,
+                [
+                    'success_url' => route('checkout.order-summary', ['id' => $order->id]),
+                    'cancel_url' => route('checkout.index'),
+                ]
+            );
+        }
 
         return redirect()->route('checkout.order-summary', ['id' => $order->id])->with('success', 'Order created successfully');
     }
