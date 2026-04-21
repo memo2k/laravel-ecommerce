@@ -124,7 +124,15 @@
                     @forelse ($products as $product)
                         <article class="rounded-xl border border-slate-200 bg-white p-4 flex flex-col gap-3">
                             <a href="{{ route('product.show', $product->slug) }}"
-                               class="block aspect-[4/3] rounded-lg bg-slate-100 border border-slate-200"></a>
+                               class="block aspect-[4/3] rounded-lg bg-slate-100 border border-slate-200">
+                                @if ($product->image)
+                                    <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-slate-100 flex items-center justify-center">
+                                        <span class="text-xs text-slate-500">No image</span>
+                                    </div>
+                                @endif
+                            </a>
 
                             <div>
                                 <p class="text-xs font-medium text-slate-500 mb-1">

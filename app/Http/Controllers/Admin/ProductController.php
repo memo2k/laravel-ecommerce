@@ -34,6 +34,8 @@ class ProductController extends Controller
     public function save(Request $request)
     {
         $validation = Validator::make($request->all(), [
+            'sku' => 'required|string|max:255',
+            'image' => 'nullable|image|max:1024',
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'price' => 'required|numeric',
@@ -46,13 +48,21 @@ class ProductController extends Controller
         }
 
         $product = $request->id ? Product::find($request->id) : new Product();
+        $product->sku = $request->sku;
         $product->name = $request->name;
-        $product->slug = $request->slug ?? Str::slug($request->name);
+        $product->slug = $request->slug ?? Str::slug($request->name, '_');
         $product->description = $request->description;
         $product->price = $request->price;
         $product->stock = $request->stock;
         $product->is_active = $request->is_active == 'on' ? 1 : 0;
         $product->product_category_id = $request->category;
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('products', $imageName, 'public');
+            $product->image = 'products/' . $imageName;
+        }
 
         $product->save();
 
