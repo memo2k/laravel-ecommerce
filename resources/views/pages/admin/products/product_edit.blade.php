@@ -14,7 +14,7 @@
         </div>
     </div>
 
-    <form method="POST" action="{{ route('admin.product.save') }}" class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] text-sm">
+    <form method="POST" action="{{ route('admin.product.save') }}" class="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] text-sm" enctype="multipart/form-data">
         @csrf
 
         <input type="hidden" name="id" value="{{ $product->id ?? '' }}">
@@ -26,6 +26,18 @@
                     Basic information
                 </h2>
                 <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            SKU
+                        </label>
+                        <input type="text"
+                               name="sku"
+                               value="{{ $product->sku ?? old('sku') }}"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                               @error('sku')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                               @enderror
+                    </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
                             Name
@@ -61,6 +73,22 @@
                                 <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                @enderror
                     </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                            Image
+                        </label>
+                        <input type="file"
+                               name="image"
+                               class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                               @error('image')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                               @enderror
+                    </div>
+                    @if ($product->image)
+                        <div class="flex items-center gap-2">
+                            <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->name }}" class="w-10 h-10 object-cover">
+                        </div>
+                    @endif
                 </div>
             </div>
 

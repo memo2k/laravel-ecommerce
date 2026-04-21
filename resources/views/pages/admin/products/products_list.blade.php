@@ -23,6 +23,8 @@
         <table class="min-w-full">
             <thead class="bg-slate-50 border-b border-slate-200 text-xs font-medium uppercase tracking-wide text-slate-600">
             <tr class="text-left">
+                <th class="px-4 py-3">Image</th>
+                <th class="px-4 py-3">SKU</th>
                 <th class="px-4 py-3">Name</th>
                 <th class="px-4 py-3">Category</th>
                 <th class="px-4 py-3">Price</th>
@@ -34,6 +36,18 @@
             <tbody class="divide-y divide-slate-200">
                 @forelse ($products as $product)
                     <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-4 py-3">
+                            @if ($product->image)
+                                <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->name }}" class="w-10 h-10 object-cover">
+                            @else
+                                <div class="w-10 h-10 bg-slate-100 flex items-center justify-center">
+                                    <span class="text-xs text-slate-500">No image</span>
+                                </div>
+                            @endif
+                        </td>
+                        <td class="px-4 py-3 text-slate-900 font-mono text-xs">
+                            {{ $product->sku }}
+                        </td>
                         <td class="px-4 py-3 text-slate-900">
                             {{ $product->name }}
                         </td>
