@@ -166,7 +166,15 @@
                         @foreach ($cartData['items'] as $item)
                             <div class="flex items-center justify-between text-sm">
                                 <div class="flex items-center gap-3">
-                                    <div class="h-10 w-10 rounded-md bg-slate-100 flex-shrink-0"></div>
+                                    <div class="h-10 w-10 rounded-md bg-slate-100 flex-shrink-0">
+                                        @if ($item['image'])
+                                            <img src="{{ asset('storage/' . ltrim($item['image'], '/')) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full bg-slate-100 flex items-center justify-center">
+                                                <span class="text-xs text-slate-500">No image</span>
+                                            </div>
+                                        @endif
+                                    </div>
                                     <div>
                                         <div class="font-medium text-slate-900">
                                             {{ $item['name'] }}
