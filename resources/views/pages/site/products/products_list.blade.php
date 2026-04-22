@@ -85,6 +85,22 @@
                         </div>
                     </div>
 
+                    @if ($attributeOptions)
+                        @foreach ($attributeOptions as $attributeName => $attributeOptions)
+                            <div>
+                                <p class="text-xs font-medium text-slate-700 uppercase tracking-wide mb-2">{{ $attributeName }}</p>
+                                <div class="space-y-2">
+                                    @foreach ($attributeOptions as $attributeOption)
+                                        <label class="flex items-center gap-2 text-sm text-slate-700">
+                                            <input type="checkbox" name="attribute_options[]" value="{{ $attributeOption->id }}" class="h-4 w-4 border-slate-300 text-slate-700 focus:ring-slate-300">
+                                            <span>{{ $attributeOption->name }}</span>
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+
                     <button type="submit"
                             class="w-full inline-flex justify-center items-center rounded-md px-4 py-2.5 text-sm font-medium text-white shadow-sm"
                             style="background-color: var(--color-accent);">
