@@ -14,6 +14,8 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    @yield('head')
 </head>
 <body
     class="min-h-screen flex text-slate-900"
@@ -72,6 +74,11 @@
             <a href="{{ route('admin.permissions') }}"
                class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
                 Permissions
+            </a>
+
+            <a href="{{ route('admin.attributes') }}"
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+                Attributes
             </a>
         </nav>
 

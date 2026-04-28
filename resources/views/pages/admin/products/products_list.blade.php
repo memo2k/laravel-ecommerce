@@ -37,19 +37,25 @@
                 @forelse ($products as $product)
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3">
-                            @if ($product->image)
-                                <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->name }}" class="w-10 h-10 object-cover">
-                            @else
-                                <div class="w-10 h-10 bg-slate-100 flex items-center justify-center">
-                                    <span class="text-xs text-slate-500">No image</span>
-                                </div>
-                            @endif
+                            <a href="{{ route('product.show', $product->slug) }}" target="_blank">
+                                @if ($product->image)
+                                    <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->name }}" class="w-10 h-10 object-cover">
+                                @else
+                                    <div class="w-10 h-10 bg-slate-100 flex items-center justify-center">
+                                        <span class="text-xs text-slate-500">No image</span>
+                                    </div>
+                                @endif
+                            </a>
                         </td>
                         <td class="px-4 py-3 text-slate-900 font-mono text-xs">
-                            {{ $product->sku }}
+                            <a href="{{ route('product.show', $product->slug) }}" target="_blank">
+                                {{ $product->sku }}
+                            </a>
                         </td>
                         <td class="px-4 py-3 text-slate-900">
-                            {{ $product->name }}
+                            <a href="{{ route('product.show', $product->slug) }}" target="_blank">
+                                {{ $product->name }}
+                            </a>
                         </td>
                         <td class="px-4 py-3 text-slate-600">
                             {{ $product->productCategory->name }}

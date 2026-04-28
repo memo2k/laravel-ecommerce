@@ -24,10 +24,12 @@ class ProductController extends Controller
     {
         $product = $request->id ? Product::find($request->id) : new Product();
         $productCategories = ProductCategory::all();
+        $attributeOptions = $product->attributeOptions;
         
         return view('pages.admin.products.product_edit', [
             'product' => $product,
             'productCategories' => $productCategories,
+            'attributeOptions' => $attributeOptions,
         ]);
     }
 
@@ -79,5 +81,46 @@ class ProductController extends Controller
         $product->delete();
 
         return response()->json(['success' => true, 'message' => 'Product deleted successfully']);
+    }
+
+    public function addAttributeOption(Request $request)
+    {
+        $messages = [
+            'attribute_id.required' => 'Attribute is required',
+            'attribute_id.exists' => 'Attribute not found',
+            'attribute_option_id.required' => 'Attribute option is required',
+            'attribute_option_id.exists' => 'Attribute option not found',
+        ]; 
+
+        $validation = Validator::make($request->all(), [
+            'attribute_id' => 'required|exists:attributes,id',
+            'attribute_option_id' => 'required|exists:attribute_options,id',
+        ], $messages);
+
+
+        if ($validation->fails()) {
+            return response()->json(['success' => false, 'errors' => $validation->errors()->toArray()]);
+        }
+
+        $product = Product::find($request->product_id);
+        $product->attributeOptions()->syncWithoutDetaching([$request->attribute_option_id]);
+
+        $htmlContent = view('pages.admin.products._product_edit_attributes', [
+            'attributeOptions' => $product->attributeOptions]
+        )->render();
+
+        return response()->json(['success' => true, 'html' => $htmlContent]);
+    }
+
+    public function removeAttributeOption(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $product->attributeOptions()->detach($request->attribute_option_id);
+
+        $htmlContent = view('pages.admin.products._product_edit_attributes', [
+            'attributeOptions' => $product->attributeOptions]
+        )->render();
+
+        return response()->json(['success' => true, 'html' => $htmlContent]);
     }
 }

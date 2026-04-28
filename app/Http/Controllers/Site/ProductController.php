@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $search = trim((string) request('q', ''));
-        $selectedCategory = request('category');
-        $sortBy = request('sort', 'newest');
-        $minPrice = request('min_price');
-        $maxPrice = request('max_price');
+        $search = trim((string) $request->q ?? '');
+        $selectedCategory = $request->category;
+        $sortBy = $request->sort ?? 'newest';
+        $minPrice = $request->min_price;
+        $maxPrice = $request->max_price;
+        $selectedAttributeOptions = $request->attribute_options;
 
         $cacheKey = 'products.index.'.md5(json_encode([
             'q' => $search,
@@ -26,16 +27,17 @@ class ProductController extends Controller
             'sort' => $sortBy,
             'min_price' => $minPrice,
             'max_price' => $maxPrice,
+            'attribute_options' => $selectedAttributeOptions,
         ]));
 
-        if (Cache::has($cacheKey) && 1 == 2) {
+        if (Cache::has($cacheKey)) {
             $viewParams = Cache::get($cacheKey);
         } else {
             $categories = ProductCategory::query()
                 ->orderBy('name')
                 ->get(['id', 'name']);
     
-            $products = ProductRepository::getProducts($search, $selectedCategory, $minPrice, $maxPrice, $sortBy);
+            $products = ProductRepository::getProducts($search, $selectedCategory, $minPrice, $maxPrice, $sortBy, $selectedAttributeOptions);
 
             if ($selectedCategory) {
                 $productCategoryAttributeIds = ProductCategory::find($selectedCategory)
@@ -51,7 +53,7 @@ class ProductController extends Controller
                     ->get()
                     ->groupBy(fn ($option) => $option->attribute->name);
             }
-                
+
             $viewParams = [
                 'products' => $products,
                 'categories' => $categories,
@@ -59,6 +61,7 @@ class ProductController extends Controller
                 'sortBy' => $sortBy,
                 'search' => $search,
                 'attributeOptions' => $attributeOptions ?? null,
+                'selectedAttributeOptions' => $selectedAttributeOptions,
             ];
 
             Cache::put($cacheKey, $viewParams, now()->addMinutes(15));
