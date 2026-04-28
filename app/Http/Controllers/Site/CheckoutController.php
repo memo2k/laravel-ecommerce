@@ -83,12 +83,15 @@ class CheckoutController extends Controller
         ]);
 
         foreach ($cartData['items'] as $item) {
+            $price = $item['discount_price'] > 0 ? $item['discount_price'] : $item['price'];
+            $total = $price * $item['quantity'];
+            
             OrderProduct::create([
                 'order_id' => $order->id,
                 'product_id' => $item['product_id'],
                 'quantity' => $item['quantity'],
-                'price' => $item['price'],
-                'total' => $item['price'] * $item['quantity'],
+                'price' => $price,
+                'total' => $total,
             ]);
         }
 

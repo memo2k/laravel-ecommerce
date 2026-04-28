@@ -56,7 +56,12 @@
                                     </button>
                                 </div>
                                 <span class="whitespace-nowrap font-medium text-slate-700">
-                                    ${{ number_format($item['price'] * $item['quantity'], 2) }}
+                                    @if ($item['discount_price'] > 0)
+                                        <span class="text-sm font-semibold text-red-500">${{ number_format($item['discount_price'] * $item['quantity'], 2) }}</span>
+                                        <span class="text-xs text-slate-400 line-through">${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                                    @else
+                                        <span class="text-sm font-semibold text-slate-900">${{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                                    @endif
                                 </span>
                             </div>
                         </div>
@@ -73,7 +78,7 @@
 
         <div class="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
             <span class="font-medium text-slate-700">Subtotal</span>
-            <span class="font-semibold text-slate-900">${{ $cartData['totalPrice'] }}</span>
+            <span class="font-semibold text-slate-900">${{ number_format($cartData['totalPrice'], 2) }}</span>
         </div>
     @endif
 

@@ -185,7 +185,6 @@
                                     </div>
                                 </div>
                                 <div class="font-medium text-slate-900">
-                                    ${{ number_format($item['price'] * $item['quantity'], 2) }}
                                 </div>
                             </div>
                         @endforeach
@@ -194,7 +193,7 @@
                     <dl class="space-y-2 text-sm">
                         <div class="flex items-center justify-between">
                             <dt class="text-slate-500">Subtotal</dt>
-                            <dd class="font-medium text-slate-900">${{ $cartData['totalPrice'] }}</dd>
+                            <dd class="font-medium text-slate-900">${{ number_format($cartData['totalPrice'], 2) }}</dd>
                         </div>
                         <div class="flex items-center justify-between">
                             <dt class="text-slate-500">Shipping</dt>
@@ -202,7 +201,7 @@
                         </div>
                         <div class="border-t border-slate-200 pt-3 mt-2 flex items-center justify-between">
                             <dt class="font-semibold text-slate-900">Total</dt>
-                            <dd class="font-semibold text-slate-900">${{ $cartData['totalPrice'] }}</dd>
+                            <dd class="font-semibold text-slate-900">${{ number_format($cartData['totalPrice'], 2) }}</dd>
                         </div>
                     </dl>
                 </div>

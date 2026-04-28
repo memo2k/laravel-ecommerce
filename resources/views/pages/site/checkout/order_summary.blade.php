@@ -81,22 +81,22 @@
             <div class="px-5 sm:px-6 py-5">
                 <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">Items</h2>
                 <ul class="divide-y divide-slate-100">
-                    @forelse ($order->orderProducts as $line)
+                    @forelse ($order->orderProducts as $orderProduct)
                         <li class="flex gap-4 py-4 first:pt-0">
                             <div class="h-14 w-14 flex-shrink-0 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden">
-                                @if ($line->product && !empty($line->product->image))
-                                    <img src="{{ asset('storage/'.ltrim($line->product->image, '/')) }}" alt=""
+                                @if ($orderProduct->product && !empty($orderProduct->product->image))
+                                    <img src="{{ asset('storage/'.ltrim($orderProduct->product->image, '/')) }}" alt=""
                                          class="h-full w-full object-cover">
                                 @endif
                             </div>
                             <div class="min-w-0 flex-1">
                                 <p class="font-medium text-slate-900 truncate">
-                                    {{ $line->product->name ?? 'Product #'.$line->product_id }}
+                                    {{ $orderProduct->product->name ?? 'Product #'.$orderProduct->product_id }}
                                 </p>
-                                <p class="text-xs text-slate-500 mt-0.5">Qty {{ $line->quantity }} × ${{ number_format((float) $line->price, 2) }}</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Qty {{ $orderProduct->quantity }} × ${{ number_format((float) $orderProduct->price, 2) }}</p>
                             </div>
                             <p class="text-sm font-semibold text-slate-900 tabular-nums flex-shrink-0">
-                                ${{ number_format((float) ($line->total ?? $line->price * $line->quantity), 2) }}
+                                ${{ number_format((float) ($orderProduct->total ?? $orderProduct->price * $orderProduct->quantity), 2) }}
                             </p>
                         </li>
                     @empty
