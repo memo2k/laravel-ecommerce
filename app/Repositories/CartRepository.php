@@ -39,6 +39,7 @@ class CartRepository
                 'name' => $item->product->name ?? 'Product',
                 'quantity' => $item->quantity,
                 'price' => (float) ($item->product->price ?? 0),
+                'discount_price' => (float) ($item->product->discount_price ?? 0),
                 'image' => $item->product->image ?? null,
             ];
         });
@@ -46,7 +47,7 @@ class CartRepository
         $cartData = [
             'items' => $items,
             'totalProducts' => $items->sum('quantity'),
-            'totalPrice' => number_format($items->sum(fn ($item) => $item['price'] * $item['quantity']), 2),
+            'totalPrice' => round($items->sum(fn ($item) => ($item['discount_price'] > 0 ? $item['discount_price'] : $item['price']) * $item['quantity']), 2),
         ];
 
         return $cartData;
