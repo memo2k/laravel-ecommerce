@@ -92,7 +92,7 @@
                                 <div class="space-y-2">
                                     @foreach ($attributeOptions as $attributeOption)
                                         <label class="flex items-center gap-2 text-sm text-slate-700">
-                                            <input type="checkbox" name="attribute_options[]" value="{{ $attributeOption->id }}" class="h-4 w-4 border-slate-300 text-slate-700 focus:ring-slate-300">
+                                            <input type="checkbox" name="attribute_options[]" value="{{ $attributeOption->id }}" @checked(!empty($selectedAttributeOptions) && in_array($attributeOption->id, $selectedAttributeOptions)) class="h-4 w-4 border-slate-300 text-slate-700 focus:ring-slate-300">
                                             <span>{{ $attributeOption->name }}</span>
                                         </label>
                                     @endforeach

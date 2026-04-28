@@ -7,7 +7,7 @@ use App\Models\Product;
 
 class ProductRepository
 {
-    public static function getProducts($search, $selectedCategory, $minPrice, $maxPrice, $sortBy)
+    public static function getProducts($search, $selectedCategory, $minPrice, $maxPrice, $sortBy, $selectedAttributeOptions)
     {
         $productsQuery = Product::query()
             ->with('productCategory')
@@ -25,6 +25,12 @@ class ProductRepository
 
         if (!empty($selectedCategory)) {
             $productsQuery->where('product_category_id', $selectedCategory);
+        }
+
+        if (!empty($selectedAttributeOptions)) {
+            $productsQuery->whereHas('attributeOptions', function ($query) use ($selectedAttributeOptions) {
+                $query->whereIn('product_attribute_option.attribute_option_id', $selectedAttributeOptions);
+            });
         }
 
         if ($minPrice !== null && $minPrice !== '') {
