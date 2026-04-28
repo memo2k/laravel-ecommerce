@@ -209,6 +209,18 @@
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
+                        Discount price
+                    </label>
+                    <input type="number" step="0.01"
+                           name="discount_price"
+                           value="{{ $product->discount_price ?? old('discount_price') }}"
+                           class="block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500">
+                           @error('discount_price')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                           @enderror
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 uppercase tracking-wide mb-1">
                         Stock
                     </label>
                     <input type="number"

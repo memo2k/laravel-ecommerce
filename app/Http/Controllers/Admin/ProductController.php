@@ -40,7 +40,8 @@ class ProductController extends Controller
             'image' => 'nullable|image|max:1024',
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0.01',
+            'discount_price' => 'nullable|numeric|min:0',
             'stock' => 'required|integer',
             'category' => 'required|exists:product_categories,id',
         ]);
@@ -55,6 +56,7 @@ class ProductController extends Controller
         $product->slug = $request->slug ?? Str::slug($request->name, '_');
         $product->description = $request->description;
         $product->price = $request->price;
+        $product->discount_price = $request->discount_price ?? 0;
         $product->stock = $request->stock;
         $product->is_active = $request->is_active == 'on' ? 1 : 0;
         $product->product_category_id = $request->category;
@@ -68,7 +70,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        return redirect()->route('admin.products')->with('success', 'Product saved successfully');
+        return redirect()->route('admin.product.edit', $product->id)->with('success', 'Product saved successfully');
     }
 
     public function delete(Request $request)
