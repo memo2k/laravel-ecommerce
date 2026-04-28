@@ -30,7 +30,7 @@ class ProductController extends Controller
             'attribute_options' => $selectedAttributeOptions,
         ]));
 
-        if (Cache::has($cacheKey) && 1 == 2) {
+        if (Cache::has($cacheKey)) {
             $viewParams = Cache::get($cacheKey);
         } else {
             $categories = ProductCategory::query()
