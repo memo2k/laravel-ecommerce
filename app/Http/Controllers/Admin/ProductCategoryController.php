@@ -21,9 +21,11 @@ class ProductCategoryController extends Controller
     public function edit(Request $request)
     {
         $productCategory = $request->id ? ProductCategory::find($request->id) : new ProductCategory();
+        $attributes = $productCategory->attributes;
 
         return view('pages.admin.product_categories.product_category_edit', [
             'productCategory' => $productCategory,
+            'attributes' => $attributes,
         ]);  
     }
 
@@ -55,5 +57,29 @@ class ProductCategoryController extends Controller
         $productCategory->delete();
 
         return response()->json(['success' => true]);
+    }
+
+    public function addAttribute(Request $request)
+    {
+        $productCategory = ProductCategory::find($request->product_category_id);
+        $productCategory->attributes()->syncWithoutDetaching([$request->attribute_id]);
+
+        $htmlContent = view('pages.admin.product_categories._product_category_edit_attributes', [
+            'attributes' => $productCategory->attributes]
+        )->render();
+
+        return response()->json(['success' => true, 'html' => $htmlContent]);
+    }
+    
+    public function removeAttribute(Request $request)
+    {
+        $productCategory = ProductCategory::find($request->product_category_id);
+        $productCategory->attributes()->detach($request->attribute_id);
+
+        $htmlContent = view('pages.admin.product_categories._product_category_edit_attributes', [
+            'attributes' => $productCategory->attributes]
+        )->render();
+
+        return response()->json(['success' => true, 'html' => $htmlContent]);
     }
 }
