@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -15,8 +15,8 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class);
     }
 
-    public function attributes(): HasMany
+    public function attributeOptions(): BelongsToMany
     {
-        return $this->hasMany(Attribute::class);
+        return $this->belongsToMany(AttributeOption::class, 'product_attribute_option', 'product_id', 'attribute_option_id');
     }
 }
