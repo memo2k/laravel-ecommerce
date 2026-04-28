@@ -164,12 +164,16 @@
 
                             <div class="mt-auto flex items-center justify-between gap-3">
                                 <div class="flex items-baseline gap-2">
-                                    <span class="text-base font-semibold text-slate-900">
-                                        ${{ number_format($product->price ?? 0, 2) }}
-                                    </span>
-                                    @if (!empty($product->old_price))
+                                    @if ($product->discount_price > 0)
+                                        <span class="text-base font-semibold text-red-500">
+                                            ${{ number_format($product->discount_price, 2) }}
+                                        </span>
                                         <span class="text-xs text-slate-400 line-through">
-                                            ${{ number_format($product->old_price, 2) }}
+                                            ${{ number_format($product->price, 2) }}
+                                        </span>
+                                    @else
+                                        <span class="text-base font-semibold text-slate-900">
+                                            ${{ number_format($product->price, 2) }}
                                         </span>
                                     @endif
                                 </div>

@@ -33,7 +33,12 @@
                 </div>
 
                 <div class="flex items-baseline gap-3">
-                    <span class="text-2xl font-semibold text-slate-900">${{ number_format($product->price, 2) }}</span>
+                    @if ($product->discount_price > 0)
+                        <span class="text-2xl font-semibold text-red-500">${{ number_format($product->discount_price, 2) }}</span>
+                        <span class="text-xs text-slate-400 line-through">${{ number_format($product->price, 2) }}</span>
+                    @else
+                        <span class="text-2xl font-semibold text-slate-900">${{ number_format($product->price, 2) }}</span>
+                    @endif
                 </div>
 
                 <p class="text-sm text-slate-600">

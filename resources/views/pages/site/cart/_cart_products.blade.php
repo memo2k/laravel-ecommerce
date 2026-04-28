@@ -34,7 +34,12 @@
                         </div>
                     </td>
                     <td class="px-4 py-4 text-sm text-slate-700">
-                        {{ $item['price'] }}
+                        @if ($item['discount_price'] > 0)
+                            <span class="text-sm font-semibold text-red-500">${{ number_format($item['discount_price'], 2) }}</span>
+                            <span class="text-xs text-slate-400 line-through">${{ number_format($item['price'], 2) }}</span>
+                        @else
+                            <span class="text-sm font-semibold text-slate-900">${{ number_format($item['price'], 2) }}</span>
+                        @endif
                     </td>
                     <td class="px-4 py-4">
                         <div class="inline-flex items-stretch rounded-md border border-slate-300 bg-white shadow-sm"
@@ -82,7 +87,7 @@
             <dl class="space-y-2 text-sm">
                 <div class="flex items-center justify-between">
                     <dt class="text-slate-500">Subtotal</dt>
-                    <dd class="font-medium text-slate-900">{{ $cartData['totalPrice'] }}</dd>
+                    <dd class="font-medium text-slate-900">${{ number_format($cartData['totalPrice'], 2) }}</dd>
                 </div>
                 <div class="flex items-center justify-between">
                     <dt class="text-slate-500">Shipping</dt>
@@ -90,7 +95,7 @@
                 </div>
                 <div class="border-t border-slate-200 pt-3 mt-2 flex items-center justify-between text-sm">
                     <dt class="font-semibold text-slate-900">Total</dt>
-                    <dd class="font-semibold text-slate-900">{{ $cartData['totalPrice'] }}</dd>
+                    <dd class="font-semibold text-slate-900">${{ number_format($cartData['totalPrice'], 2) }}</dd>
                 </div>
             </dl>
 
