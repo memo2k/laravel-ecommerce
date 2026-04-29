@@ -47,7 +47,11 @@
                     </div>
                     <div>
                         <p class="text-xs uppercase tracking-wide text-slate-500">Total amount</p>
-                        <p class="text-slate-900">${{ number_format((float) ($order->total_amount ?? 0), 2) }}</p>
+                        <p class="text-slate-900">${{ $order->total_amount ?? 0 }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wide text-slate-500">Shipping amount</p>
+                        <p class="text-slate-900">${{ $order->shipping_amount ?? 0 }}</p>
                     </div>
                     <div>
                         <p class="text-xs uppercase tracking-wide text-slate-500">Status</p>
@@ -107,7 +111,7 @@
                                 <td class="px-4 py-3 text-slate-900">{{ $item->product_id }}</td>
                                 <td class="px-4 py-3 text-slate-900">{{ $item->quantity }}</td>
                                 <td class="px-4 py-3 text-slate-900">
-                                    ${{ number_format((float) ($item->price ?? 0), 2) }}
+                                    ${{ $item->price ?? 0 }}
                                 </td>
                             </tr>
                         @empty
