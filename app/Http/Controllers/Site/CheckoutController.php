@@ -68,6 +68,8 @@ class CheckoutController extends Controller
 
         $order = Order::create([
             'user_id' => Auth::user()->id ?? null,
+            'products_total_amount' => $cartData['itemsTotalAmount'],
+            'shipping_amount' => $cartData['shippingAmount'],    
             'total_amount' => $cartData['totalPrice'],
             'status' => $initialStatus,
             'payment_method' => $request->payment_method,
