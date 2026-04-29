@@ -93,10 +93,10 @@
                                 <p class="font-medium text-slate-900 truncate">
                                     {{ $orderProduct->product->name ?? 'Product #'.$orderProduct->product_id }}
                                 </p>
-                                <p class="text-xs text-slate-500 mt-0.5">Qty {{ $orderProduct->quantity }} × ${{ number_format((float) $orderProduct->price, 2) }}</p>
+                                <p class="text-xs text-slate-500 mt-0.5">Qty {{ $orderProduct->quantity }} × ${{ $orderProduct->price }}</p>
                             </div>
                             <p class="text-sm font-semibold text-slate-900 tabular-nums flex-shrink-0">
-                                ${{ number_format((float) ($orderProduct->total ?? $orderProduct->price * $orderProduct->quantity), 2) }}
+                                ${{ $orderProduct->total ?? $orderProduct->price * $orderProduct->quantity }}
                             </p>
                         </li>
                     @empty
@@ -105,9 +105,29 @@
                 </ul>
 
                 <div class="mt-5 pt-5 border-t border-slate-200 flex items-center justify-between">
+                    <span class="text-sm font-semibold text-slate-900">Subtotal</span>
+                    <span class="text-lg font-semibold text-slate-900 tabular-nums">
+                        ${{ $order->products_total_amount ?? 0 }}
+                    </span>
+                </div>
+                
+                <div class="mt-5 pt-5 border-t border-slate-200 flex items-center justify-between">
+                    <span class="text-sm font-semibold text-slate-900">Shipping</span>
+                    <span class="text-lg font-semibold text-slate-900 tabular-nums">
+                        @if ($order->shipping_amount > 0)
+                            ${{ $order->shipping_amount ?? 0 }}
+                        @else
+                            <span class="text-green-500 font-semibold">
+                                Free
+                            </span>
+                        @endif
+                    </span>
+                </div>
+
+                <div class="mt-5 pt-5 border-t border-slate-200 flex items-center justify-between">
                     <span class="text-sm font-semibold text-slate-900">Total</span>
                     <span class="text-lg font-semibold text-slate-900 tabular-nums">
-                        ${{ number_format((float) ($order->total_amount ?? 0), 2) }}
+                        ${{ $order->total_amount ?? 0 }}
                     </span>
                 </div>
             </div>
