@@ -44,10 +44,16 @@ class CartRepository
             ];
         });
 
+        $itemsTotalAmount = $items->sum(fn ($item) => ($item['discount_price'] > 0 ? $item['discount_price'] : $item['price']) * $item['quantity']);
+        $shippingAmount = $itemsTotalAmount > 100 ? 0 : 10;
+        $totalAmount = $itemsTotalAmount + $shippingAmount;
+
         $cartData = [
             'items' => $items,
             'totalProducts' => $items->sum('quantity'),
-            'totalPrice' => round($items->sum(fn ($item) => ($item['discount_price'] > 0 ? $item['discount_price'] : $item['price']) * $item['quantity']), 2),
+            'itemsTotalAmount' => (float) $itemsTotalAmount,
+            'shippingAmount' => (float) $shippingAmount,
+            'totalPrice' => (float) $totalAmount,
         ];
 
         return $cartData;
