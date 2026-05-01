@@ -62,6 +62,7 @@ class ProductController extends Controller
                 'search' => $search,
                 'attributeOptions' => $attributeOptions ?? null,
                 'selectedAttributeOptions' => $selectedAttributeOptions,
+                'lowStockThreshold' => setting_value(\App\Constants\SettingConstant::PRODUCT_LOW_STOCK_THRESHOLD),
             ];
 
             Cache::put($cacheKey, $viewParams, now()->addMinutes(15));
@@ -84,6 +85,9 @@ class ProductController extends Controller
             Cache::put($cacheKey, $product, now()->addMinutes(15));
         }
 
-        return view('pages.site.products.product', ['product' => $product]);
+        return view('pages.site.products.product', [
+            'product' => $product,
+            'lowStockThreshold' => setting_value(\App\Constants\SettingConstant::PRODUCT_LOW_STOCK_THRESHOLD),
+        ]);
     }
 }
