@@ -34,7 +34,22 @@
             </tr>
             </thead>
             <tbody class="divide-y divide-slate-200">
+                @php
+                    $lowStockThreshold = setting_value(\App\Constants\SettingConstant::PRODUCT_LOW_STOCK_THRESHOLD);
+                @endphp
                 @forelse ($products as $product)
+                    @php
+                        $stock = $product->stock > $lowStockThreshold 
+                            ? \App\Constants\ProductStockConstant::IN_STOCK 
+                            : ($product->stock > 0 ? \App\Constants\ProductStockConstant::LOW_STOCK : \App\Constants\ProductStockConstant::OUT_OF_STOCK);
+
+                        $stockBadgeClass = match ($stock) {
+                            \App\Constants\ProductStockConstant::IN_STOCK => 'text-black bg-emerald-200',
+                            \App\Constants\ProductStockConstant::LOW_STOCK => 'text-black bg-amber-200',
+                            \App\Constants\ProductStockConstant::OUT_OF_STOCK => 'text-black bg-red-200',
+                            default => 'text-black bg-slate-200',
+                        };
+                    @endphp
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="px-4 py-3">
                             <a href="{{ route('product.show', $product->slug) }}" target="_blank">
@@ -74,8 +89,10 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="px-4 py-3 text-slate-900">
-                            {{ $product->stock }}
+                        <td class="px-4 py-3">
+                            <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium {{ $stockBadgeClass }}">
+                                {{ \App\Constants\ProductStockConstant::PRODUCT_STOCK_STATE_LABELS[$stock] }}
+                            </span>
                         </td>
                         <td class="px-4 py-3 text-right">
                             <div class="inline-flex items-center gap-2 text-xs">

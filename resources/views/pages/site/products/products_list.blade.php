@@ -138,6 +138,18 @@
 
                 <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                     @forelse ($products as $product)
+                        @php
+                            $stock = $product->stock > $lowStockThreshold 
+                                ? \App\Constants\ProductStockConstant::IN_STOCK 
+                                : ($product->stock > 0 ? \App\Constants\ProductStockConstant::LOW_STOCK : \App\Constants\ProductStockConstant::OUT_OF_STOCK);
+
+                            $stockBadgeClass = match ($stock) {
+                                \App\Constants\ProductStockConstant::IN_STOCK => 'text-black bg-emerald-200',
+                                \App\Constants\ProductStockConstant::LOW_STOCK => 'text-black bg-amber-200',
+                                \App\Constants\ProductStockConstant::OUT_OF_STOCK => 'text-black bg-red-200',
+                                default => 'text-black bg-slate-200',
+                            };
+                        @endphp
                         <article class="rounded-xl border border-slate-200 bg-white p-4 flex flex-col gap-3">
                             <a href="{{ route('product.show', $product->slug) }}"
                                class="block aspect-[4/3] rounded-lg bg-slate-100 border border-slate-200">
@@ -162,6 +174,12 @@
                                 </h3>
                             </div>
 
+                            <div class="flex items-center gap-2">
+                                <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium {{ $stockBadgeClass }}">
+                                    {{ \App\Constants\ProductStockConstant::PRODUCT_STOCK_STATE_LABELS[$stock] }}
+                                </span>
+                            </div>
+
                             <div class="mt-auto flex items-center justify-between gap-3">
                                 <div class="flex items-baseline gap-2">
                                     @if ($product->discount_price > 0)
@@ -178,12 +196,14 @@
                                     @endif
                                 </div>
 
-                                <button type="button"
-                                        data-product-id="{{ $product->id }}"
-                                        class="rounded-full px-3 py-1.5 text-xs font-medium text-white add-to-cart"
-                                        style="background-color: var(--color-accent);">
-                                    Add
-                                </button>
+                                @if ($stock !== \App\Constants\ProductStockConstant::OUT_OF_STOCK)
+                                    <button type="button"
+                                            data-product-id="{{ $product->id }}"
+                                            class="rounded-full px-3 py-1.5 text-xs font-medium text-white add-to-cart"
+                                            style="background-color: var(--color-accent);">
+                                        Add
+                                    </button>
+                                @endif
                             </div>
                         </article>
                     @empty
