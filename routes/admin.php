@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\SelectController;
+use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
@@ -50,5 +51,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('/attribute/save', [AttributeController::class, 'save'])->name('attribute.save');
     Route::delete('/attribute/delete', [AttributeController::class, 'delete'])->name('attribute.delete');
 
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings');
+    Route::get('/setting/edit/{id?}', [SettingController::class, 'edit'])->name('setting.edit');
+    Route::post('/setting/save', [SettingController::class, 'save'])->name('setting.save');
+    
     Route::get('/select', [SelectController::class, 'index'])->name('select');
 });
