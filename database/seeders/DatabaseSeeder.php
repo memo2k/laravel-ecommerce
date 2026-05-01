@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
 
         foreach (SettingConstant::SETTINGS as $group => $settings) {
             foreach ($settings as $key => $value) {
-                Setting::create([
+                Setting::updateOrCreate([
                     'label' => SettingConstant::SETTING_LABELS[$key],
                     'key' => $key,
                     'value' => $value,
