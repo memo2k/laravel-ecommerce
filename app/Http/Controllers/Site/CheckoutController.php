@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\OrderPlaceMail;
 use App\Models\Order;
 use App\Models\OrderProduct;
+use App\Models\Product;
 use App\Repositories\CartRepository;
 use App\Services\CartService;
 use Illuminate\Http\Request;
@@ -62,6 +63,13 @@ class CheckoutController extends Controller
 
         $cartData = $this->cartRepository->getCartData();
 
+        $products = Product::whereIn('id', array_column($cartData['items'], 'product_id'))->get();
+        foreach ($products as $product) {
+            if ($product->stock < array_column($cartData['items'], 'quantity', 'product_id')[$product->id]) {
+                return redirect()->back()->with('error', 'The quantity of product ' . $product->name . ' is not available in stock.');
+            }
+        }
+
         $initialStatus = $request->payment_method === PaymentMethodConstant::CARD
             ? OrderStatusConstant::UNPAID
             : OrderStatusConstant::PENDING;
@@ -69,7 +77,7 @@ class CheckoutController extends Controller
         $order = Order::create([
             'user_id' => Auth::user()->id ?? null,
             'products_total_amount' => $cartData['itemsTotalAmount'],
-            'shipping_amount' => $cartData['shippingAmount'],    
+            'shipping_amount' => $cartData['shippingAmount'],
             'total_amount' => $cartData['totalPrice'],
             'status' => $initialStatus,
             'payment_method' => $request->payment_method,
@@ -87,6 +95,10 @@ class CheckoutController extends Controller
         foreach ($cartData['items'] as $item) {
             $price = $item['discount_price'] > 0 ? $item['discount_price'] : $item['price'];
             $total = $price * $item['quantity'];
+
+            $product = Product::find($item['product_id']);
+            $product->stock -= $item['quantity'];
+            $product->save();
             
             OrderProduct::create([
                 'order_id' => $order->id,
@@ -96,7 +108,6 @@ class CheckoutController extends Controller
                 'total' => $total,
             ]);
         }
-
         
         $this->cartService->clearCart();
         
