@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Constants\SettingConstant;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Permission;
@@ -9,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\Role;
 use App\Models\RoleUser;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -74,5 +76,19 @@ class DatabaseSeeder extends Seeder
 
         Artisan::call('app:import-dummy-product-categories');
         Artisan::call('app:import-dummy-products');
+
+        foreach (SettingConstant::SETTINGS as $group => $settings) {
+            foreach ($settings as $key => $value) {
+                Setting::create([
+                    'label' => SettingConstant::SETTING_LABELS[$key],
+                    'key' => $key,
+                    'value' => $value,
+                    'group' => $group,
+                    'type' => 'string',
+                    'is_public' => true,
+                    'description' => SettingConstant::SETTING_LABELS[$key] . ' setting for ' . $group,
+                ]);
+            }
+        }
     }
 }
