@@ -12,6 +12,13 @@
             <!-- Shipping / billing form -->
             <form method="POST" action="{{ route('checkout.store') }}" class="space-y-6 rounded-xl border border-slate-200 bg-white p-5 text-sm">
                 @csrf
+
+                @if (session('error'))
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <span class="block sm:inline">{{ session('error') }}</span>
+                    </div>
+                @endif
+
                 <div class="grid gap-4 md:grid-cols-2">
                     <div>
                         <label class="block text-xs font-medium text-slate-700 uppercase tracking-wide mb-1">
