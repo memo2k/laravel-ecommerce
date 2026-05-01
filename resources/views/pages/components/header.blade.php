@@ -20,7 +20,7 @@
             <div class="flex items-center gap-4 text-slate-700">
                 @auth
                     @if(auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') ?? '#' }}" class="hidden sm:inline hover:text-slate-900 hover:underline">
+                        <a href="{{ route('admin.dashboard') ?? '#' }}" target="_blank" class="hidden sm:inline hover:text-slate-900 hover:underline">
                             Dashboard
                         </a>
                     @endif

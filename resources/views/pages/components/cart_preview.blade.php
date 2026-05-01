@@ -13,13 +13,13 @@
         <span class="text-xs text-slate-500">{{ $cartData['totalProducts'] }} items</span>
     </div>
 
-    @if ($cartData['items']->isEmpty())
+    @if (empty($cartData['items']))
         <p class="rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-600">
             Your cart is empty.
         </p>
     @else
         <ul class="max-h-72 space-y-2 overflow-y-auto pr-1">
-            @foreach ($cartData['items']->take(4) as $item)
+            @foreach (array_slice($cartData['items'], 0, 4) as $item)
                 <li class="rounded-md border border-slate-100 px-3 py-2 text-xs">
                     <div class="flex items-start gap-3">
                         <div class="h-14 w-14 flex-shrink-0 overflow-hidden rounded-md border border-slate-200 bg-slate-50">

@@ -1,4 +1,4 @@
-@if ($cartData['items']->isEmpty())
+@if (empty($cartData['items']))
     <p class="text-slate-600">No products in your cart.</p>
 @else
 <div class="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
