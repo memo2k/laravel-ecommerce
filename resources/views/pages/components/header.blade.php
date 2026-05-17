@@ -25,6 +25,10 @@
                         </a>
                     @endif
 
+                    <a href="{{ route('profile.index') ?? '#' }}" class="hidden sm:inline hover:text-slate-900 hover:underline">
+                        Profile
+                    </a>
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="hidden sm:inline hover:text-slate-900 hover:underline">
