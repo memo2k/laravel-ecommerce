@@ -38,7 +38,12 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index');
         }
 
-        return view('pages.site.checkout.checkout', ['cartData' => $cartData]);
+        $userAddress = Auth::user()?->userAddress;
+
+        return view('pages.site.checkout.checkout', [
+            'cartData' => $cartData,
+            'userAddress' => $userAddress,
+        ]);
     }
 
     public function store(Request $request)
