@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constants\ProductStockConstant;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
@@ -14,9 +15,53 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
+
+        $lowStockThreshold = (int) setting_value(\App\Constants\SettingConstant::PRODUCT_LOW_STOCK_THRESHOLD);
+
+        $resolveStockState = function ($product) use ($lowStockThreshold) {
+            if ($product->stock > $lowStockThreshold) {
+                return ProductStockConstant::IN_STOCK;
+            }
+            if ($product->stock > 0) {
+                return ProductStockConstant::LOW_STOCK;
+            }
+            return ProductStockConstant::OUT_OF_STOCK;
+        };
+
+        $inventoryCounts = [
+            ProductStockConstant::IN_STOCK => 0,
+            ProductStockConstant::LOW_STOCK => 0,
+            ProductStockConstant::OUT_OF_STOCK => 0,
+        ];
+
+        $activeCount = 0;
+        $inactiveCount = 0;
+        $categories = [];
+
+        foreach ($products as $product) {
+            $state = $resolveStockState($product);
+            $inventoryCounts[$state]++;
+
+            if ($product->is_active) {
+                $activeCount++;
+            } else {
+                $inactiveCount++;
+            }
+
+            $categoryName = $product->productCategory?->name ?? 'Uncategorized';
+            $categories[$categoryName] = ($categories[$categoryName] ?? 0) + 1;
+        }
+
+        ksort($categories);
         
         return view('pages.admin.products.products_list', [
             'products' => $products,
+            'inventoryCounts' => $inventoryCounts,
+            'activeCount' => $activeCount,
+            'inactiveCount' => $inactiveCount,
+            'categories' => $categories,
+            'lowStockThreshold' => $lowStockThreshold,
+            'resolveStockState' => $resolveStockState,
         ]);
     }
 
