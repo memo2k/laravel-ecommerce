@@ -32,6 +32,7 @@
     @include('pages.components.footer')
 
     @yield('scripts')
+    @stack('scripts')
 
     <script>
         function showCartPreviewPanel() {

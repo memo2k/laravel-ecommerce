@@ -61,7 +61,7 @@
                             Phone
                         </label>
                         <input type="tel" name="phone" autocomplete="tel"
-                               value="{{ old('phone') }}"
+                               value="{{ old('phone', $userAddress?->phone) }}"
                                placeholder="+1 555 0100"
                                class="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300">
                         @error('phone')
@@ -75,7 +75,7 @@
                         Address
                     </label>
                     <input type="text" name="address"
-                           value="{{ old('address') }}"
+                           value="{{ old('address', $userAddress?->address) }}"
                            class="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300">
                         @error('address')
                             <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -88,7 +88,7 @@
                             City
                         </label>
                         <input type="text" name="city"
-                               value="{{ old('city') }}"
+                               value="{{ old('city', $userAddress?->city) }}"
                                class="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300">
                         @error('city')
                             <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -99,7 +99,7 @@
                             ZIP / Postal code
                         </label>
                         <input type="text" name="zip"
-                               value="{{ old('zip') }}"
+                               value="{{ old('zip', $userAddress?->zip) }}"
                                class="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300">
                         @error('zip')
                             <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -110,7 +110,7 @@
                             Country
                         </label>
                         <input type="text" name="country"
-                               value="{{ old('country') }}"
+                               value="{{ old('country', $userAddress?->country) }}"
                                class="block w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-300">
                         @error('country')
                             <span class="text-red-500 text-xs">{{ $message }}</span>

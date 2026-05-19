@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Site\ProfileController;
 use App\Http\Controllers\Site\CartController;
 use App\Http\Controllers\Site\CheckoutController;
 use App\Http\Controllers\Site\HomepageController;
@@ -10,9 +10,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomepageController::class, 'index'])->name('homepage');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/update-address', [ProfileController::class, 'updateAddress'])->name('profile.update-address');
+    Route::delete('/profile/delete-account', [ProfileController::class, 'destroy'])->name('profile.delete-account');
 });
 
 Route::prefix('checkout')->name('checkout.')->group(function () {
@@ -23,7 +24,6 @@ Route::prefix('checkout')->name('checkout.')->group(function () {
 
 Route::get('/products', [SiteProductController::class, 'index'])->name('products.index');
 Route::get('/product/{slug}', [SiteProductController::class, 'show'])->name('product.show');
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');

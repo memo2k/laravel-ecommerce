@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Constants\OrderStatusConstant;
 use App\Http\Controllers\Controller;
 use App\Mail\OrderStatusMail;
 use App\Models\Order;
@@ -15,8 +16,45 @@ class OrderController extends Controller
     {
         $orders = Order::orderBy('created_at', 'desc')->get();
 
+        $statusCounts = array_fill_keys(OrderStatusConstant::ORDER_STATUSES, 0);
+        $paymentMethods = [];
+        $totalRevenue = 0;
+        $needsActionCount = 0;
+
+        foreach ($orders as $order) {
+            $status = $order->status;
+            if (isset($statusCounts[$status])) {
+                $statusCounts[$status]++;
+            } else {
+                $statusCounts[$status] = ($statusCounts[$status] ?? 0) + 1;
+            }
+
+            $totalRevenue += (float) $order->total_amount;
+
+            if (in_array($status, [
+                OrderStatusConstant::PENDING,
+                OrderStatusConstant::PROCESSING,
+                OrderStatusConstant::UNPAID,
+            ], true)) {
+                $needsActionCount++;
+            }
+
+            $method = $order->payment_method ?: 'Unknown';
+            $paymentMethods[$method] = ($paymentMethods[$method] ?? 0) + 1;
+        }
+
+        ksort($paymentMethods);
+
+        $totalOrders = $orders->count();
+        $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+
         return view('pages.admin.orders.orders_list', [
             'orders' => $orders,
+            'totalOrders' => $totalOrders,
+            'totalRevenue' => $totalRevenue,
+            'avgOrderValue' => $avgOrderValue,
+            'needsActionCount' => $needsActionCount,
+            'paymentMethods' => $paymentMethods,
         ]);
     }
 
