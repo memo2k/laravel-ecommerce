@@ -46,6 +46,11 @@
                 Dashboard
             </a>
 
+            <a href="{{ route('admin.orders') }}"
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+                Orders
+            </a>
+
             <a href="{{ route('admin.products') }}"
                class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
                 Products
@@ -56,9 +61,9 @@
                 Categories
             </a>
 
-            <a href="{{ route('admin.orders') }}"
+            <a href="{{ route('admin.attributes') }}"
                class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
-                Orders
+                Attributes
             </a>
 
             <a href="{{ route('admin.users') }}"
@@ -76,19 +81,19 @@
                 Permissions
             </a>
 
-            <a href="{{ route('admin.attributes') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
-                Attributes
-            </a>
-
             <a href="{{ route('admin.settings') }}"
                class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
                 Settings
             </a>
+
+            {{-- <a href="{{ route('admin.logs') }}"
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+                Logs
+            </a> --}}
         </nav>
 
         <div class="px-4 py-4 border-t border-slate-200 space-y-3">
-            <a href="{{ route('homepage') }}" target="_blank"
+            <a href="{{ route('products.index') }}" target="_blank"
                class="flex items-center gap-2 text-xs text-slate-500 hover:text-slate-700 transition-colors">
                 <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
@@ -112,7 +117,7 @@
                 <a href="#" class="hover:underline">Orders</a>
                 <a href="#" class="hover:underline">Customers</a>
                 <span class="text-slate-300">|</span>
-                <a href="{{ route('homepage') }}" target="_blank" class="hover:underline text-slate-500">Site ↗</a>
+                <a href="{{ route('products.index') }}" target="_blank" class="hover:underline text-slate-500">Site ↗</a>
             </div>
         </div>
     </header>
