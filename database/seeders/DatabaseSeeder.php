@@ -78,6 +78,7 @@ class DatabaseSeeder extends Seeder
         Artisan::call('app:import-dummy-products');
         Artisan::call('app:import-dummy-users');
         Artisan::call('app:import-dummy-orders');
+        Artisan::call('app:import-dummy-attributes');
 
         foreach (SettingConstant::SETTINGS as $group => $settings) {
             foreach ($settings as $key => $value) {
