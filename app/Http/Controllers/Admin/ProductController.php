@@ -12,9 +12,31 @@ use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
+        $productsQb = Product::orderBy('created_at', 'desc');
+
+        if ($request->has('filters')) {
+            $productsQb = $productsQb->where(function ($query) use ($request) {
+                if ($request->has('filters.search')) {
+                    $query->where('name', 'like', '%' . $request->filters['search'] . '%')
+                        ->orWhere('sku', 'like', '%' . $request->filters['search'] . '%');
+                }
+                if ($request->has('filters.stock')) {
+                    $query->where('stock', $request->filters['stock']);
+                }
+                if ($request->has('filters.status')) {
+                    $query->where('is_active', $request->filters['status']);
+                }
+            })->whereHas('productCategory', function ($query) use ($request) {
+                if ($request->has('filters.category')) {
+                    $query->where('name', 'like', '%' . $request->filters['category'] . '%');
+                }
+            });
+        }
+
+        $allProducts = $productsQb->get();
+        $paginatedProducts = $productsQb->paginate(20);
 
         $lowStockThreshold = (int) setting_value(\App\Constants\SettingConstant::PRODUCT_LOW_STOCK_THRESHOLD);
 
@@ -38,7 +60,7 @@ class ProductController extends Controller
         $inactiveCount = 0;
         $categories = [];
 
-        foreach ($products as $product) {
+        foreach ($allProducts as $product) {
             $state = $resolveStockState($product);
             $inventoryCounts[$state]++;
 
@@ -55,13 +77,15 @@ class ProductController extends Controller
         ksort($categories);
         
         return view('pages.admin.products.products_list', [
-            'products' => $products,
+            'products' => $paginatedProducts,
+            'totalProducts' => $allProducts->count(),
             'inventoryCounts' => $inventoryCounts,
             'activeCount' => $activeCount,
             'inactiveCount' => $inactiveCount,
             'categories' => $categories,
             'lowStockThreshold' => $lowStockThreshold,
             'resolveStockState' => $resolveStockState,
+            'filters' => $request->filters ?? [],
         ]);
     }
 
