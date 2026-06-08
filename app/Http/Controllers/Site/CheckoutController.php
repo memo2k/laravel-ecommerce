@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Cashier\Cashier;
 
@@ -117,8 +118,8 @@ class CheckoutController extends Controller
         $this->cartService->clearCart();
         
         if ($request->payment_method === PaymentMethodConstant::CARD) {
-            $successUrl = route('checkout.order-summary', ['id' => $order->id]).'&session_id={CHECKOUT_SESSION_ID}';
-            
+            $successUrl = $this->orderSummaryUrl($order).'&session_id={CHECKOUT_SESSION_ID}';
+
             return $request->user()->checkoutCharge(
                 round($order->total_amount * 100),
                 'Order #'.$order->id,
@@ -131,15 +132,15 @@ class CheckoutController extends Controller
         }
 
         Mail::to($order->customer_email)->send(new OrderPlaceMail($order));
-            
-        return redirect()->route('checkout.order-summary', ['id' => $order->id])->with('success', 'Order created successfully');
+
+        return redirect()->to($this->orderSummaryUrl($order))->with('success', 'Order created successfully');
     }
 
-    public function orderSummary(Request $request)
+    public function orderSummary(Request $request, Order $order)
     {
-        $order = Order::query()
-            ->with(['orderProducts.product'])
-            ->findOrFail($request->query('id'));
+        $this->authorizeOrderAccess($request, $order);
+
+        $order->load(['orderProducts.product']);
 
         if ($order->status === OrderStatusConstant::UNPAID && $request->filled('session_id')) {
             try {
@@ -157,5 +158,24 @@ class CheckoutController extends Controller
         }
 
         return view('pages.site.checkout.order_summary', ['order' => $order]);
+    }
+
+    private function orderSummaryUrl(Order $order): string
+    {
+        return URL::temporarySignedRoute(
+            'checkout.order-summary',
+            now()->addDays(30),
+            ['order' => $order->id],
+        );
+    }
+
+    private function authorizeOrderAccess(Request $request, Order $order): void
+    {
+        $hasValidSignature = $request->hasValidSignatureWhileIgnoring(['session_id']);
+        $ownsOrder = Auth::check() && $order->user_id === Auth::id();
+
+        if (! $hasValidSignature && ! $ownsOrder) {
+            abort(403);
+        }
     }
 }
