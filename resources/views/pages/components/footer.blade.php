@@ -7,7 +7,7 @@
             &copy; {{ date('Y') }} ShopDemo. All rights reserved.
         </div>
         <div class="flex items-center gap-4">
-            <a href="#" class="hover:underline">
+            <a href="{{ route('privacy') }}" class="hover:underline">
                 Privacy Notice
             </a>
         </div>

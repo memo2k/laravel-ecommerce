@@ -19,6 +19,8 @@ Route::prefix('checkout')->name('checkout.')->group(function () {
     Route::get('/order-summary/{order}', [CheckoutController::class, 'orderSummary'])->name('order-summary');
 });
 
+Route::view('/privacy', 'pages.site.privacy')->name('privacy');
+
 Route::get('/', [SiteProductController::class, 'index'])->name('products.index');
 Route::get('/product/{slug}', [SiteProductController::class, 'show'])->name('product.show');
 
