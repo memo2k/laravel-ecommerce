@@ -142,7 +142,6 @@
                                            {{ old('payment_method', 'cash_on_delivery') === $key ? 'checked' : '' }}>
                                     <span>
                                         <span class="block font-medium text-slate-900">{{ $value }}</span>
-                                        <span class="text-xs text-slate-500">{{ $value === 'Cash on delivery' ? 'Pay when your order arrives.' : 'Demo only — no card details collected.' }}</span>
                                     </span>
                                 </label>
                             @endforeach

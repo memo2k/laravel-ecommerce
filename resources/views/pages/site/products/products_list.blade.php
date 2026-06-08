@@ -3,21 +3,6 @@
 @section('title', 'Products – ShopDemo')
 
 @section('content')
-    <section class="bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900">
-                        Products
-                    </h1>
-                    <p class="text-sm text-slate-600 mt-1">
-                        Discover simple, clean product cards with practical filters.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <aside class="rounded-xl border border-slate-200 bg-white p-5 h-fit">

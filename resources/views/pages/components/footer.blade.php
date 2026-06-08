@@ -8,13 +8,7 @@
         </div>
         <div class="flex items-center gap-4">
             <a href="#" class="hover:underline">
-                About
-            </a>
-            <a href="#" class="hover:underline">
-                Contact
-            </a>
-            <a href="#" class="hover:underline">
-                Terms
+                Privacy Notice
             </a>
         </div>
     </div>
