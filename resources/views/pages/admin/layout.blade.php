@@ -18,7 +18,7 @@
     @yield('head')
 </head>
 <body
-    class="min-h-screen flex text-slate-900"
+    class="min-h-screen flex flex-col text-slate-900"
     style="
         --color-primary: {{ $primaryColor }};
         --color-secondary: {{ $secondaryColor }};
@@ -26,6 +26,9 @@
         background-color: var(--color-secondary);
     "
 >
+    @include('pages.components.demo_notice')
+
+    <div class="flex flex-1 min-h-0">
     <!-- Sidebar -->
     <aside
         class="hidden md:flex md:flex-col w-64 bg-white border-r border-slate-200"
@@ -104,29 +107,30 @@
         </div>
     </aside>
 
-    <!-- Mobile top nav -->
-    <header class="md:hidden w-full border-b border-slate-200"
-            style="background-color: var(--color-primary);">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between text-sm">
-            <div class="font-semibold">
-                ShopDemo <span class="text-slate-500">Admin</span>
-            </div>
-            <div class="flex gap-3 text-xs">
-                <a href="{{ route('admin.dashboard') }}" class="hover:underline">Dashboard</a>
-                <a href="{{ route('admin.dashboard') }}" class="hover:underline">Products</a>
-                <a href="#" class="hover:underline">Orders</a>
-                <a href="#" class="hover:underline">Customers</a>
-                <span class="text-slate-300">|</span>
-                <a href="{{ route('products.index') }}" target="_blank" class="hover:underline text-slate-500">Site ↗</a>
-            </div>
-        </div>
-    </header>
-
     <!-- Main content -->
-    <div class="flex-1 flex flex-col" style="background-color: var(--color-secondary);">
+    <div class="flex-1 flex flex-col min-w-0" style="background-color: var(--color-secondary);">
+        <!-- Mobile top nav -->
+        <header class="md:hidden w-full border-b border-slate-200"
+                style="background-color: var(--color-primary);">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between text-sm">
+                <div class="font-semibold">
+                    ShopDemo <span class="text-slate-500">Admin</span>
+                </div>
+                <div class="flex gap-3 text-xs">
+                    <a href="{{ route('admin.dashboard') }}" class="hover:underline">Dashboard</a>
+                    <a href="{{ route('admin.dashboard') }}" class="hover:underline">Products</a>
+                    <a href="#" class="hover:underline">Orders</a>
+                    <a href="#" class="hover:underline">Customers</a>
+                    <span class="text-slate-300">|</span>
+                    <a href="{{ route('products.index') }}" target="_blank" class="hover:underline text-slate-500">Site ↗</a>
+                </div>
+            </div>
+        </header>
+
         <main class="w-full max-w-6xl mx-auto px-4 py-6">
             @yield('content')
         </main>
+    </div>
     </div>
 
     @yield('scripts')
