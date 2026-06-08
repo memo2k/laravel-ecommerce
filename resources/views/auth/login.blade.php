@@ -2,6 +2,24 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <div class="mb-6 rounded-md border border-amber-200 bg-amber-50 p-4 text-sm dark:border-amber-800 dark:bg-amber-900/20">
+        <p class="mb-2 font-medium text-amber-900 dark:text-amber-200">Demo admin credentials</p>
+        <div class="space-y-2 text-amber-800 dark:text-amber-300">
+            <div class="flex items-center justify-between gap-2">
+                <span>Email: <code id="demo-email" class="rounded bg-amber-100 px-1.5 py-0.5 dark:bg-amber-900/40">admin@site.com</code></span>
+                <button type="button" data-copy-target="demo-email" class="shrink-0 rounded border border-amber-300 px-2 py-0.5 text-xs hover:bg-amber-100 dark:border-amber-700 dark:hover:bg-amber-900/40">
+                    Copy
+                </button>
+            </div>
+            <div class="flex items-center justify-between gap-2">
+                <span>Password: <code id="demo-password" class="rounded bg-amber-100 px-1.5 py-0.5 dark:bg-amber-900/40">Pl42@sa!</code></span>
+                <button type="button" data-copy-target="demo-password" class="shrink-0 rounded border border-amber-300 px-2 py-0.5 text-xs hover:bg-amber-100 dark:border-amber-700 dark:hover:bg-amber-900/40">
+                    Copy
+                </button>
+            </div>
+        </div>
+    </div>
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
@@ -44,4 +62,23 @@
             </x-primary-button>
         </div>
     </form>
+
+    <script>
+        document.querySelectorAll('[data-copy-target]').forEach((button) => {
+            button.addEventListener('click', async () => {
+                const text = document.getElementById(button.dataset.copyTarget)?.textContent?.trim();
+
+                if (!text) {
+                    return;
+                }
+
+                await navigator.clipboard.writeText(text);
+                const originalLabel = button.textContent;
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = originalLabel;
+                }, 1500);
+            });
+        });
+    </script>
 </x-guest-layout>
