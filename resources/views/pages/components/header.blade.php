@@ -31,10 +31,6 @@
                     <a href="{{ route('login') ?? '#' }}" class="hidden sm:inline hover:text-slate-900 hover:underline">
                         Login
                     </a>
-                    
-                    <a href="{{ route('register') ?? '#' }}" class="hidden sm:inline hover:text-slate-900 hover:underline">
-                        Register
-                    </a>
                 @endauth
                 <div class="relative group" id="cart_preview">
                     @include('pages.components.cart_preview')
