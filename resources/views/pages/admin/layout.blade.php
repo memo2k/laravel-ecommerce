@@ -50,42 +50,50 @@
             </a>
 
             <a href="{{ route('admin.orders') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.orders' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.orders') style="background-color: var(--color-accent);" @endif>
                 Orders
             </a>
 
             <a href="{{ route('admin.products') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.products' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.products') style="background-color: var(--color-accent);" @endif>
                 Products
             </a>
 
             <a href="{{ route('admin.product-categories') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.product-categories' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.product-categories') style="background-color: var(--color-accent);" @endif>
                 Categories
             </a>
 
             <a href="{{ route('admin.attributes') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.attributes' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.attributes') style="background-color: var(--color-accent);" @endif>
                 Attributes
             </a>
 
             <a href="{{ route('admin.users') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.users' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.users') style="background-color: var(--color-accent);" @endif>
                 Users
             </a>
 
             <a href="{{ route('admin.roles') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.roles' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.roles') style="background-color: var(--color-accent);" @endif>
                 Roles
             </a>
 
             <a href="{{ route('admin.permissions') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.permissions' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.permissions') style="background-color: var(--color-accent);" @endif>
                 Permissions
             </a>
 
             <a href="{{ route('admin.settings') }}"
-               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors">
+               class="block rounded-md px-3 py-2 font-medium text-slate-700 hover:bg-slate-100 transition-colors {{ $currentRoute === 'admin.settings' ? 'text-white' : 'text-slate-700 hover:bg-slate-100' }}"
+               @if($currentRoute === 'admin.settings') style="background-color: var(--color-accent);" @endif>
                 Settings
             </a>
 
