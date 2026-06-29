@@ -7,54 +7,86 @@ use App\Constants\OrderStatusConstant;
 use App\Mail\OrderStatusMail;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::orderBy('created_at', 'desc')->paginate(20);
+        $totalOrders = Order::count();
+        $totalRevenue = (float) Order::sum('total_amount');
+        $needsActionCount = Order::whereIn('status', [
+            OrderStatusConstant::PENDING,
+            OrderStatusConstant::PROCESSING,
+            OrderStatusConstant::UNPAID,
+        ])->count();
 
-        $statusCounts = array_fill_keys(OrderStatusConstant::ORDER_STATUSES, 0);
-        $paymentMethods = [];
-        $totalRevenue = 0;
-        $needsActionCount = 0;
+        $query = Order::query();
 
-        foreach ($orders as $order) {
-            $status = $order->status;
-            if (isset($statusCounts[$status])) {
-                $statusCounts[$status]++;
-            } else {
-                $statusCounts[$status] = ($statusCounts[$status] ?? 0) + 1;
-            }
-
-            $totalRevenue += (float) $order->total_amount;
-
-            if (in_array($status, [
-                OrderStatusConstant::PENDING,
-                OrderStatusConstant::PROCESSING,
-                OrderStatusConstant::UNPAID,
-            ], true)) {
-                $needsActionCount++;
-            }
-
-            $method = $order->payment_method ?: 'Unknown';
-            $paymentMethods[$method] = ($paymentMethods[$method] ?? 0) + 1;
+        $search = trim((string) $request->input('search', ''));
+        if ($search !== '') {
+            $searchId = ltrim($search, '#');
+            $query->where(function ($q) use ($search, $searchId) {
+                $q->where('id', 'like', '%' . $searchId . '%')
+                    ->orWhere('customer_first_name', 'like', '%' . $search . '%')
+                    ->orWhere('customer_last_name', 'like', '%' . $search . '%')
+                    ->orWhere('customer_email', 'like', '%' . $search . '%');
+            });
         }
 
-        ksort($paymentMethods);
+        $status = $request->input('status');
+        if ($status && in_array($status, OrderStatusConstant::ORDER_STATUSES, true)) {
+            $query->where('status', $status);
+        }
 
-        $totalOrders = $orders->count();
-        $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
+        $period = $request->input('period');
+        if (in_array($period, ['7', '30', '90'], true)) {
+            $query->where('created_at', '>=', now()->subDays((int) $period));
+        }
+
+        $payment = $request->input('payment');
+        if ($payment) {
+            if ($payment === 'unknown') {
+                $query->where(function ($q) {
+                    $q->whereNull('payment_method')->orWhere('payment_method', '');
+                });
+            } else {
+                $query->where(DB::raw('LOWER(payment_method)'), strtolower($payment));
+            }
+        }
+
+        $sort = $request->input('sort', 'date');
+        $direction = $request->input('direction', 'desc') === 'asc' ? 'asc' : 'desc';
+
+        if ($sort === 'total') {
+            $query->orderBy('total_amount', $direction);
+        } else {
+            $query->orderBy('created_at', $direction);
+        }
+
+        $orders = $query->paginate(20)->withQueryString();
+
+        $paymentMethods = Order::query()
+            ->selectRaw('COALESCE(NULLIF(payment_method, ""), "Unknown") as method, COUNT(*) as count')
+            ->groupBy('method')
+            ->pluck('count', 'method')
+            ->all();
+        ksort($paymentMethods);
 
         return view('pages.admin.orders.orders_list', [
             'orders' => $orders,
             'totalOrders' => $totalOrders,
             'totalRevenue' => $totalRevenue,
-            'avgOrderValue' => $avgOrderValue,
             'needsActionCount' => $needsActionCount,
             'paymentMethods' => $paymentMethods,
+            'search' => $search,
+            'status' => $status,
+            'period' => $period,
+            'payment' => $payment,
+            'sort' => $sort,
+            'direction' => $direction,
         ]);
     }
 

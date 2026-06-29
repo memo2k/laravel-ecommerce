@@ -14,78 +14,93 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $productsQb = Product::orderBy('created_at', 'desc');
+        $lowStockThreshold = (int) setting_value(\App\Constants\SettingConstant::PRODUCT_LOW_STOCK_THRESHOLD);
 
-        if ($request->has('filters')) {
-            $productsQb = $productsQb->where(function ($query) use ($request) {
-                if ($request->has('filters.search')) {
-                    $query->where('name', 'like', '%' . $request->filters['search'] . '%')
-                        ->orWhere('sku', 'like', '%' . $request->filters['search'] . '%');
-                }
-                if ($request->has('filters.stock')) {
-                    $query->where('stock', $request->filters['stock']);
-                }
-                if ($request->has('filters.status')) {
-                    $query->where('is_active', $request->filters['status']);
-                }
-            })->whereHas('productCategory', function ($query) use ($request) {
-                if ($request->has('filters.category')) {
-                    $query->where('name', 'like', '%' . $request->filters['category'] . '%');
-                }
+        $totalProducts = Product::count();
+        $activeCount = Product::where('is_active', true)->count();
+        $lowStockCount = Product::where('stock', '<=', $lowStockThreshold)->count();
+
+        $query = Product::with('productCategory');
+
+        $search = trim((string) $request->input('search', ''));
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('sku', 'like', '%' . $search . '%');
             });
         }
 
-        $allProducts = $productsQb->get();
-        $paginatedProducts = $productsQb->paginate(20);
-
-        $lowStockThreshold = (int) setting_value(\App\Constants\SettingConstant::PRODUCT_LOW_STOCK_THRESHOLD);
-
-        $resolveStockState = function ($product) use ($lowStockThreshold) {
-            if ($product->stock > $lowStockThreshold) {
-                return ProductStockConstant::IN_STOCK;
-            }
-            if ($product->stock > 0) {
-                return ProductStockConstant::LOW_STOCK;
-            }
-            return ProductStockConstant::OUT_OF_STOCK;
-        };
-
-        $inventoryCounts = [
-            ProductStockConstant::IN_STOCK => 0,
-            ProductStockConstant::LOW_STOCK => 0,
-            ProductStockConstant::OUT_OF_STOCK => 0,
-        ];
-
-        $activeCount = 0;
-        $inactiveCount = 0;
-        $categories = [];
-
-        foreach ($allProducts as $product) {
-            $state = $resolveStockState($product);
-            $inventoryCounts[$state]++;
-
-            if ($product->is_active) {
-                $activeCount++;
+        $stock = $request->input('stock');
+        if ($stock && in_array($stock, ProductStockConstant::PRODUCT_STOCK_STATES, true)) {
+            if ($stock === ProductStockConstant::OUT_OF_STOCK) {
+                $query->where('stock', '<=', 0);
+            } elseif ($stock === ProductStockConstant::LOW_STOCK) {
+                $query->where('stock', '>', 0)->where('stock', '<=', $lowStockThreshold);
             } else {
-                $inactiveCount++;
+                $query->where('stock', '>', $lowStockThreshold);
             }
-
-            $categoryName = $product->productCategory?->name ?? 'Uncategorized';
-            $categories[$categoryName] = ($categories[$categoryName] ?? 0) + 1;
         }
 
-        ksort($categories);
-        
+        $status = $request->input('status');
+        if ($status === 'active') {
+            $query->where('is_active', true);
+        } elseif ($status === 'inactive') {
+            $query->where('is_active', false);
+        }
+
+        $category = $request->input('category');
+        if ($category === 'Uncategorized') {
+            $query->whereNull('product_category_id');
+        } elseif ($category) {
+            $query->whereHas('productCategory', fn ($q) => $q->where('name', $category));
+        }
+
+        $sort = $request->input('sort', 'name');
+        $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+        match ($sort) {
+            'price' => $query->orderBy('price', $direction),
+            'stock' => $query->orderBy('stock', $direction),
+            default => $query->orderBy('name', $direction),
+        };
+
+        $products = $query->paginate(20)->withQueryString();
+
+        $categories = ProductCategory::withCount('products')
+            ->having('products_count', '>', 0)
+            ->orderBy('name')
+            ->pluck('products_count', 'name')
+            ->all();
+
+        $uncategorizedCount = Product::whereNull('product_category_id')->count();
+        if ($uncategorizedCount > 0) {
+            $categories['Uncategorized'] = $uncategorizedCount;
+        }
+
+        $resolveStockState = function ($product) use ($lowStockThreshold) {
+            if ($product->stock <= 0) {
+                return ProductStockConstant::OUT_OF_STOCK;
+            }
+            if ($product->stock <= $lowStockThreshold) {
+                return ProductStockConstant::LOW_STOCK;
+            }
+            return ProductStockConstant::IN_STOCK;
+        };
+
         return view('pages.admin.products.products_list', [
-            'products' => $paginatedProducts,
-            'totalProducts' => $allProducts->count(),
-            'inventoryCounts' => $inventoryCounts,
+            'products' => $products,
+            'totalProducts' => $totalProducts,
             'activeCount' => $activeCount,
-            'inactiveCount' => $inactiveCount,
-            'categories' => $categories,
+            'lowStockCount' => $lowStockCount,
             'lowStockThreshold' => $lowStockThreshold,
+            'categories' => $categories,
             'resolveStockState' => $resolveStockState,
-            'filters' => $request->filters ?? [],
+            'search' => $search,
+            'stock' => $stock,
+            'status' => $status,
+            'category' => $category,
+            'sort' => $sort,
+            'direction' => $direction,
         ]);
     }
 
