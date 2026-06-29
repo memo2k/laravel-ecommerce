@@ -7,7 +7,7 @@
 </a>
 
 <div id="cart_preview_panel"
-    class="invisible absolute right-0 top-full z-20 mt-2 w-[27rem] translate-y-1 rounded-lg border border-slate-200 bg-white p-4 text-slate-800 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+    class="invisible absolute right-0 top-full z-20 mt-2 hidden w-[27rem] max-w-[calc(100vw-2rem)] translate-y-1 rounded-lg border border-slate-200 bg-white p-4 text-slate-800 opacity-0 shadow-lg transition-all duration-150 sm:block sm:group-hover:visible sm:group-hover:translate-y-0 sm:group-hover:opacity-100">
     <div class="mb-2 flex items-center justify-between">
         <p class="text-sm font-semibold text-slate-900">Cart preview</p>
         <span class="text-xs text-slate-500">{{ $cartData['totalProducts'] }} items</span>
