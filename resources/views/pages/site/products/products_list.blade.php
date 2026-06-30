@@ -236,6 +236,8 @@
                         </div>
                     @endforelse
                 </div>
+
+                @include('pages.site.components.pagination', ['paginator' => $products])
             </div>
         </div>
     </section>

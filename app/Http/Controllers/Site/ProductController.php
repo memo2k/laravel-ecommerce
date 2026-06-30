@@ -30,14 +30,16 @@ class ProductController extends Controller
             'attribute_options' => $selectedAttributeOptions,
         ]));
 
+        $products = null;
+
         if (Cache::has($cacheKey)) {
             $viewParams = Cache::get($cacheKey);
         } else {
+            $products = ProductRepository::getProducts($search, $selectedCategory, $minPrice, $maxPrice, $sortBy, $selectedAttributeOptions);
+
             $categories = ProductCategory::query()
                 ->orderBy('name')
                 ->get(['id', 'name']);
-    
-            $products = ProductRepository::getProducts($search, $selectedCategory, $minPrice, $maxPrice, $sortBy, $selectedAttributeOptions);
 
             if ($selectedCategory) {
                 $productCategoryAttributeIds = ProductCategory::find($selectedCategory)
@@ -55,7 +57,6 @@ class ProductController extends Controller
             }
 
             $viewParams = [
-                'products' => $products,
                 'categories' => $categories,
                 'selectedCategory' => $selectedCategory,
                 'sortBy' => $sortBy,
@@ -67,6 +68,15 @@ class ProductController extends Controller
 
             Cache::put($cacheKey, $viewParams, now()->addMinutes(15));
         }
+
+        $viewParams['products'] = $products ?? ProductRepository::getProducts(
+            $search,
+            $selectedCategory,
+            $minPrice,
+            $maxPrice,
+            $sortBy,
+            $selectedAttributeOptions
+        );
 
         return view('pages.site.products.products_list', $viewParams);
     }
