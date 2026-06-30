@@ -173,9 +173,9 @@
                         @endphp
                         <article class="flex flex-col gap-2 rounded-xl border border-slate-200 bg-white p-3 sm:gap-3 sm:p-4">
                             <a href="{{ route('product.show', $product->slug) }}"
-                               class="block aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-100 sm:aspect-[4/3]">
+                               class="flex aspect-square items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-100 sm:aspect-[4/3]">
                                 @if ($product->image)
-                                    <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                                    <img src="{{ asset('storage/' . ltrim($product->image, '/')) }}" alt="{{ $product->name }}" class="max-h-full max-w-full object-contain">
                                 @else
                                     <div class="flex h-full w-full items-center justify-center bg-slate-100">
                                         <span class="text-[10px] text-slate-500 sm:text-xs">No image</span>

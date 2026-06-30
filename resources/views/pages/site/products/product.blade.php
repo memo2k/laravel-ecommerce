@@ -19,19 +19,16 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="grid gap-10 lg:grid-cols-2">
             <div class="rounded-xl border border-slate-200 bg-white p-4 sm:p-6">
-                <div class="aspect-[4/3] rounded-lg bg-slate-100 mb-4 overflow-hidden border border-slate-200">
+                <div class="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-100 mb-4">
                     @if (!empty($product->image))
                         <img
                             src="{{ asset('storage/' . ltrim($product->image, '/')) }}"
                             alt="{{ $product->name }}"
-                            class="h-full w-full object-cover"
+                            class="max-h-full max-w-full object-contain"
                         >
+                    @else
+                        <span class="text-sm text-slate-500">No image</span>
                     @endif
-                </div>
-                <div class="grid grid-cols-4 gap-2">
-                    @foreach (range(1, 4) as $i)
-                        <button type="button" class="aspect-square rounded-md bg-slate-100 border border-slate-200"></button>
-                    @endforeach
                 </div>
             </div>
 
