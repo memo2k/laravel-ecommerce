@@ -38,6 +38,7 @@ class CartRepository
                 'id' => $item->id,
                 'product_id' => $item->product_id,
                 'name' => $item->product->name,
+                'slug' => $item->product->slug,
                 'quantity' => $item->quantity,
                 'price' => (float) ($item->product->price ?? 0),
                 'discount_price' => (float) ($item->product->discount_price ?? 0),

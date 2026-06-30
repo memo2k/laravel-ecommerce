@@ -20,15 +20,19 @@
                     <td class="px-4 py-4">
                         <div class="flex items-center gap-3">
                             <div class="h-12 w-12 rounded-md bg-slate-100 flex-shrink-0">
-                                @if (!empty($item['image']))
-                                    <img src="{{ asset('storage/' . ltrim($item['image'], '/')) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="flex h-full w-full items-center justify-center text-[10px] text-slate-400">No image</div>
-                                @endif
+                                <a href="{{ route('product.show', $item['slug']) }}">
+                                    @if (!empty($item['image']))
+                                        <img src="{{ asset('storage/' . ltrim($item['image'], '/')) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="flex h-full w-full items-center justify-center text-[10px] text-slate-400">No image</div>
+                                    @endif
+                                </a>
                             </div>
                             <div>
                                 <div class="text-sm font-medium text-slate-900">
-                                    {{ $item['name'] }}
+                                    <a href="{{ route('product.show', $item['slug']) }}">
+                                        {{ $item['name'] }}
+                                    </a>
                                 </div>
                             </div>
                         </div>
