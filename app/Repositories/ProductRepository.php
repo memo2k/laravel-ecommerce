@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Models\AttributeOption;
 use App\Models\Product;
 
 class ProductRepository
@@ -57,6 +56,6 @@ class ProductRepository
                 break;
         }
 
-        return $productsQuery->get();
+        return $productsQuery->paginate(18);
     }
 }
