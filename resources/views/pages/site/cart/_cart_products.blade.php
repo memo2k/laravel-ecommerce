@@ -109,13 +109,6 @@
                 Checkout
             </a>
         </div>
-
-        <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
-            <p class="mb-1 font-medium text-slate-700">
-                Need a promo code?
-            </p>
-            <p>Apply discounts in a future step once you wire up backend logic.</p>
-        </div>
     </aside>
 </div>
 @endif

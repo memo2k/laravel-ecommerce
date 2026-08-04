@@ -211,12 +211,6 @@
                         </div>
                     </dl>
                 </div>
-
-                <div class="rounded-lg border border-dashed border-slate-300 bg-slate-50 px-4 py-3 text-xs text-slate-600">
-                    <p class="mb-1 font-medium text-slate-700">
-                        This checkout is for portfolio/demo purposes. Hook it to real payment logic when you are ready.
-                    </p>
-                </div>
             </aside>
         </div>
     </div>
